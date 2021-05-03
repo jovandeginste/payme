@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for HTML5 for Linux version 5.6.0">
+  <title>Pay me!</title>
+  <link rel="stylesheet" type="text/css" href="static/style.css">
+  <script src="static/jquery-3.6.0.min.js"></script>
+  <script src="static/script.js"></script>
+</head>
+<body>
+  <h1>Hello, please pay me...</h1>
+
+  <div id="all">
+    <div id="form">
+      <form>
+        <label for="name_beneficiary">Name:</label><br>
+        <input type="text" id="name_beneficiary" name="name_beneficiary" value=""><br>
+        <label for="iban_beneficiary">IBAN:</label><br>
+        <input type="text" id="iban_beneficiary" name="iban_beneficiary" value=""><br>
+        <label for="amount">Amount:</label><br>
+        <input type="text" id="amount" name="amount" value=""><br>
+        <label for="remittance">Remittance:</label><br>
+        <input type="text" id="remittance" name="remittance" value=""><br>
+        <label for="structured">Structured:</label><br>
+        <input type="checkbox" id="structured" name="structured" value=""><br>
+        <input type="button" id="submit" value="Submit">
+        <div id="reply">
+        </div>
+      </form>
+    </div>
+
+    <div id="code"><img id="codeImage" alt="QR code" src="data:image/jpg;base64,">
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+* {
+  font-size: 1rem;
+}
+
+#all {
+  display: flex;
+}
+
+#form, #code {
+  width: 45%;
+}
+
+#code {
+  float: right;
+}
+
+#code img {
+  border: 1px solid black;
+  padding: 1rem;
+}
+
+#reply {
+  color: red;
+}
+
+input[type="text"] {
+  width: 20rem;
+}
