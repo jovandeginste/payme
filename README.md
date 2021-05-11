@@ -21,3 +21,7 @@ $ payme --help
   -structured
     	Make the remittance (message) structured
 ```
+
+```bash
+$ payme -name "Franz Mustermänn" -iban "DE71110220330123456789" -amount 12.3 -remittance "RF18539007547034" > QR.png
+```
