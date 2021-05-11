@@ -1,9 +1,15 @@
 Simple CLI tool to generate payment QR codes
 
+Install:
+
+```bash
+$ go get github.com/jovandeginste/payme
+```
+
 Usage:
 
-```
-./payme --help
+```bash
+$ payme --help
   -amount float
     	Amount of the transaction
   -iban string
