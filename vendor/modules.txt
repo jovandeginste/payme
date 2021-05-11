@@ -6,6 +6,9 @@ github.com/boombuler/barcode/utils
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
+# github.com/mdp/qrterminal/v3 v3.0.0
+## explicit
+github.com/mdp/qrterminal/v3
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
 # github.com/stretchr/testify v1.7.0
@@ -13,3 +16,7 @@ github.com/pmezard/go-difflib/difflib
 github.com/stretchr/testify/assert
 # gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 gopkg.in/yaml.v3
+# rsc.io/qr v0.2.0
+rsc.io/qr
+rsc.io/qr/coding
+rsc.io/qr/gf256

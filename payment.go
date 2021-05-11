@@ -5,10 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"image/png"
+	"os"
 	"strings"
 
 	"github.com/boombuler/barcode"
 	"github.com/boombuler/barcode/qr"
+	"github.com/mdp/qrterminal/v3"
 )
 
 // See: https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/quick-response-code-guidelines-enable-data-capture-initiation
@@ -215,6 +217,17 @@ func (p *Payment) RemittanceString(structured bool) string {
 	}
 
 	return p.Remittance
+}
+
+func (p *Payment) ToQRStdout() error {
+	t, err := p.ToQRString()
+	if err != nil {
+		return err
+	}
+
+	qrterminal.Generate(t, qrterminal.L, os.Stdout)
+
+	return nil
 }
 
 func (p *Payment) ToQRPNG(qrSize int) ([]byte, error) {

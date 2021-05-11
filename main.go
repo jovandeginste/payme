@@ -14,6 +14,7 @@ type QRParams struct {
 	Amount          float64
 	Remittance      string
 	IsStructured    bool
+	OutputType      string
 }
 
 func main() {
@@ -24,20 +25,41 @@ func main() {
 	flag.Float64Var(&p.Amount, "amount", 0, "Amount of the transaction")
 	flag.StringVar(&p.Remittance, "remittance", "", "Remittance (message)")
 	flag.BoolVar(&p.IsStructured, "structured", false, "Make the remittance (message) structured")
+	flag.StringVar(&p.OutputType, "output", "stdout", "output type: png or stdout")
 
 	flag.Parse()
 
 	log.Printf("%#v\n", p)
 
-	qr, err := generateQR(p)
-	if err != nil {
-		log.Fatal(err)
-	}
+	switch p.OutputType {
+	case "png":
+		qr, err := generateQRPNG(p)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	fmt.Print(qr)
+		fmt.Print(qr)
+	case "stdout":
+		err := generateQRStdout(p)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
 
-func generateQR(params *QRParams) (string, error) {
+func generateQRStdout(params *QRParams) error {
+	p := NewPayment()
+
+	p.NameBeneficiary = params.NameBeneficiary
+	p.IBANBeneficiary = params.IBANBeneficiary
+	p.EuroAmount = params.Amount
+	p.Remittance = params.Remittance
+	p.RemittanceIsStructured = params.IsStructured
+
+	return p.ToQRStdout()
+}
+
+func generateQRPNG(params *QRParams) (string, error) {
 	p := NewPayment()
 
 	p.NameBeneficiary = params.NameBeneficiary
