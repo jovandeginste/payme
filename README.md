@@ -1,5 +1,17 @@
-Simple web app to generate payment QR codes
+Simple CLI tool to generate payment QR codes
 
-Start the app (defaults to port 8080 for now), browse to it, fill the fields, and hit the submit button.
+Usage:
 
-Everything is "local" (to your webserver)
+```
+./payme --help
+  -amount float
+    	Amount of the transaction
+  -iban string
+    	IBAN of the beneficiary
+  -name string
+    	Name of the beneficiary
+  -remittance string
+    	Remittance (message)
+  -structured
+    	Make the remittance (message) structured
+```
