@@ -25,6 +25,14 @@ func TestUnstructuredPaymentQR(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, expected, result)
+
+	result, err = p.ToQRPNG(300)
+	assert.NoError(t, err)
+
+	expected, err = ioutil.ReadFile("tests/test1.png")
+
+	assert.NoError(t, err)
+	assert.Equal(t, expected, result)
 }
 
 func TestStructuredPaymentQR(t *testing.T) {
@@ -43,6 +51,14 @@ func TestStructuredPaymentQR(t *testing.T) {
 	assert.NoError(t, err)
 
 	expected, err := ioutil.ReadFile("tests/test2.qr")
+
+	assert.NoError(t, err)
+	assert.Equal(t, expected, result)
+
+	result, err = p.ToQRPNG(300)
+	assert.NoError(t, err)
+
+	expected, err = ioutil.ReadFile("tests/test2.png")
 
 	assert.NoError(t, err)
 	assert.Equal(t, expected, result)
