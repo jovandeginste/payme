@@ -26,8 +26,8 @@ type QRParams struct {
 
 func main() {
 	cmdRoot := &cobra.Command{
-		Use:   "generate QR code",
-		Short: "Generate QR code",
+		Use:   "payme",
+		Short: "Generate SEPA payment QR code",
 		Run: func(cmd *cobra.Command, args []string) {
 			generate()
 		},

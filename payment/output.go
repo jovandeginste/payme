@@ -41,7 +41,7 @@ func (p *Payment) ToQRString() ([]byte, error) {
 		return nil, err
 	}
 
-	qrterminal.Generate(t, qrterminal.L, &result)
+	qrterminal.GenerateHalfBlock(t, qrterminal.M, &result)
 
 	return result.Bytes(), nil
 }
