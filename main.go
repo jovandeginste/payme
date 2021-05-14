@@ -12,8 +12,6 @@ import (
 
 const QRSize = 300
 
-var q QRParams
-
 type QRParams struct {
 	Payment    *payment.Payment
 	OutputType string
@@ -22,13 +20,15 @@ type QRParams struct {
 }
 
 func main() {
-	q.Payment = payment.New()
+	q := QRParams{
+		Payment: payment.New(),
+	}
 
 	cmdRoot := &cobra.Command{
 		Use:   "payme",
 		Short: "Generate SEPA payment QR code",
 		Run: func(cmd *cobra.Command, args []string) {
-			generate()
+			q.generate()
 		},
 	}
 
@@ -51,7 +51,7 @@ func main() {
 	}
 }
 
-func generate() {
+func (q *QRParams) generate() {
 	var (
 		qr  []byte
 		err error

@@ -7,6 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const QRSize = 300
+
 func TestUnstructuredPaymentQR(t *testing.T) {
 	p := New()
 
@@ -26,7 +28,7 @@ func TestUnstructuredPaymentQR(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, expected, result)
 
-	result, err = p.ToQRPNG(300)
+	result, err = p.ToQRPNG(QRSize)
 	assert.NoError(t, err)
 
 	expected, err = ioutil.ReadFile("tests/test1.png")
@@ -55,7 +57,7 @@ func TestStructuredPaymentQR(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, expected, result)
 
-	result, err = p.ToQRPNG(300)
+	result, err = p.ToQRPNG(QRSize)
 	assert.NoError(t, err)
 
 	expected, err = ioutil.ReadFile("tests/test2.png")
