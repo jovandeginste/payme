@@ -7,14 +7,14 @@ import (
 )
 
 func TestIncompletePayment(t *testing.T) {
-	p := NewPayment()
+	p := New()
 
-	_, err := p.ToQRString()
+	_, err := p.ToString()
 	assert.Error(t, err)
 }
 
 func TestUnstructuredPayment(t *testing.T) {
-	p := NewPayment()
+	p := New()
 
 	assert.Equal(t, "002", p.VersionString())
 	assert.Equal(t, "2", p.CharacterSetString())
@@ -24,7 +24,7 @@ func TestUnstructuredPayment(t *testing.T) {
 	p.EuroAmount = 12.3
 	p.Remittance = "Client:Marie Louise La Lune"
 
-	result, err := p.ToQRString()
+	result, err := p.ToString()
 	assert.NoError(t, err)
 
 	expected := `BCD
@@ -44,7 +44,7 @@ Client:Marie Louise La Lune
 }
 
 func TestStructuredPayment(t *testing.T) {
-	p := NewStructuredPayment()
+	p := NewStructured()
 
 	p.Version = 1
 	p.CharacterSet = 1
@@ -55,7 +55,7 @@ func TestStructuredPayment(t *testing.T) {
 	p.Purpose = "GDDS"
 	p.Remittance = "RF18539007547034"
 
-	result, err := p.ToQRString()
+	result, err := p.ToString()
 	assert.NoError(t, err)
 
 	expected := `BCD

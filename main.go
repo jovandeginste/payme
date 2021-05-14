@@ -33,24 +33,27 @@ func main() {
 
 	log.Printf("%#v\n", p)
 
+	var (
+		qr  string
+		err error
+	)
+
 	switch p.OutputType {
 	case "png":
-		qr, err := generateQRPNG(p)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Print(qr)
+		qr, err = generateQRPNG(p)
 	case "stdout":
-		err := generateQRStdout(p)
-		if err != nil {
-			log.Fatal(err)
-		}
+		qr, err = generateQRStdout(p)
 	}
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Print(qr)
 }
 
-func generateQRStdout(params *QRParams) error {
-	p := payment.NewPayment()
+func (params *QRParams) preparePayment() payment.Payment {
+	p := payment.New()
 
 	p.NameBeneficiary = params.NameBeneficiary
 	p.IBANBeneficiary = params.IBANBeneficiary
@@ -58,17 +61,17 @@ func generateQRStdout(params *QRParams) error {
 	p.Remittance = params.Remittance
 	p.RemittanceIsStructured = params.IsStructured
 
-	return p.ToQRStdout()
+	return p
+}
+
+func generateQRStdout(params *QRParams) (string, error) {
+	p := params.preparePayment()
+
+	return p.ToQRString()
 }
 
 func generateQRPNG(params *QRParams) (string, error) {
-	p := payment.NewPayment()
-
-	p.NameBeneficiary = params.NameBeneficiary
-	p.IBANBeneficiary = params.IBANBeneficiary
-	p.EuroAmount = params.Amount
-	p.Remittance = params.Remittance
-	p.RemittanceIsStructured = params.IsStructured
+	p := params.preparePayment()
 
 	png, err := p.ToQRPNG(QRSize)
 	if err != nil {

@@ -42,7 +42,7 @@ type Payment struct {
 	RemittanceIsStructured bool
 }
 
-func NewStructuredPayment() Payment {
+func NewStructured() Payment {
 	return Payment{
 		ServiceTag:             "BCD",
 		Version:                2,
@@ -52,7 +52,7 @@ func NewStructuredPayment() Payment {
 	}
 }
 
-func NewPayment() Payment {
+func New() Payment {
 	return Payment{
 		ServiceTag:             "BCD",
 		Version:                2,

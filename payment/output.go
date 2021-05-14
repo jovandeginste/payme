@@ -3,8 +3,6 @@ package payment
 import (
 	"bytes"
 	"image/png"
-	"io"
-	"os"
 	"strings"
 
 	"github.com/boombuler/barcode"
@@ -12,7 +10,7 @@ import (
 	"github.com/mdp/qrterminal/v3"
 )
 
-func (p *Payment) ToQRString() (string, error) {
+func (p *Payment) ToString() (string, error) {
 	if err := p.ValidateFields(); err != nil {
 		return "", err
 	}
@@ -35,23 +33,21 @@ func (p *Payment) ToQRString() (string, error) {
 	return strings.Join(fields, "\n"), nil
 }
 
-func (p *Payment) ToQRStdout() error {
-	return p.toQRStdout(os.Stdout)
-}
+func (p *Payment) ToQRString() (string, error) {
+	var result bytes.Buffer
 
-func (p *Payment) toQRStdout(o io.Writer) error {
-	t, err := p.ToQRString()
+	t, err := p.ToString()
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	qrterminal.Generate(t, qrterminal.L, o)
+	qrterminal.Generate(t, qrterminal.L, &result)
 
-	return nil
+	return result.String(), nil
 }
 
 func (p *Payment) ToQRPNG(qrSize int) ([]byte, error) {
-	t, err := p.ToQRString()
+	t, err := p.ToString()
 	if err != nil {
 		return nil, err
 	}
