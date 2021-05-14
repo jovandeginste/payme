@@ -8,6 +8,7 @@ import (
 
 	"github.com/jovandeginste/payme/payment"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 const QRSize = 300
@@ -32,23 +33,35 @@ func main() {
 		},
 	}
 
+	q.init(cmdRoot)
+
+	if err := cmdRoot.Execute(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (q *QRParams) init(cmdRoot *cobra.Command) {
+	viper.SetEnvPrefix("PAYME")
+
+	for _, e := range []string{"name", "bic", "iban"} {
+		if err := viper.BindEnv(e); err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	cmdRoot.Flags().StringVar(&q.OutputType, "output", "stdout", "output type: png or stdout")
 	cmdRoot.Flags().StringVar(&q.OutputFile, "file", "", "write code to file, leave empty for stdout")
 	cmdRoot.Flags().BoolVar(&q.Debug, "debug", false, "print debug output")
 
 	cmdRoot.Flags().IntVar(&q.Payment.CharacterSet, "character-set", 2, "QR code character set")
-	cmdRoot.Flags().StringVar(&q.Payment.NameBeneficiary, "name", "", "Name of the beneficiary")
-	cmdRoot.Flags().StringVar(&q.Payment.BICBeneficiary, "bic", "", "BIC of the beneficiary")
 	cmdRoot.Flags().IntVar(&q.Payment.Version, "version", 2, "QR code version")
-	cmdRoot.Flags().StringVar(&q.Payment.IBANBeneficiary, "iban", "", "IBAN of the beneficiary")
+	cmdRoot.Flags().StringVar(&q.Payment.NameBeneficiary, "name", viper.GetString("name"), "Name of the beneficiary")
+	cmdRoot.Flags().StringVar(&q.Payment.BICBeneficiary, "bic", viper.GetString("bic"), "BIC of the beneficiary")
+	cmdRoot.Flags().StringVar(&q.Payment.IBANBeneficiary, "iban", viper.GetString("iban"), "IBAN of the beneficiary")
 	cmdRoot.Flags().Float64Var(&q.Payment.EuroAmount, "amount", 0, "Amount of the transaction")
 	cmdRoot.Flags().StringVar(&q.Payment.Remittance, "remittance", "", "Remittance (message)")
 	cmdRoot.Flags().StringVar(&q.Payment.Purpose, "purpose", "", "Purpose of the transaction")
 	cmdRoot.Flags().BoolVar(&q.Payment.RemittanceIsStructured, "structured", false, "Make the remittance (message) structured")
-
-	if err := cmdRoot.Execute(); err != nil {
-		log.Fatal(err)
-	}
 }
 
 func (q *QRParams) generate() {

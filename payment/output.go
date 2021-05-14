@@ -20,7 +20,7 @@ func (p *Payment) ToString() (string, error) {
 		p.VersionString(),
 		p.CharacterSetString(),
 		p.IdentificationCode,
-		p.BICBeneficiary,
+		p.BICBeneficiaryString(),
 		p.NameBeneficiary,
 		p.IBANBeneficiaryString(),
 		p.EuroAmountString(),
@@ -31,6 +31,14 @@ func (p *Payment) ToString() (string, error) {
 	}
 
 	return strings.Join(fields, "\n"), nil
+}
+
+func (p *Payment) BICBeneficiaryString() string {
+	if p.Version != 1 {
+		return ""
+	}
+
+	return p.BICBeneficiary
 }
 
 func (p *Payment) ToQRString() ([]byte, error) {

@@ -84,7 +84,7 @@ func (p *Payment) VersionString() string {
 }
 
 func (p *Payment) CharacterSetString() string {
-	return fmt.Sprintf("%d", p.Version)
+	return fmt.Sprintf("%d", p.CharacterSet)
 }
 
 func (p *Payment) EuroAmountString() string {
