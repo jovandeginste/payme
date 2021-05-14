@@ -26,11 +26,13 @@ Flags:
       --structured          Make the remittance (message) structured
 ```
 
+Generate QR code as text, print on the console:
+
 ```bash
 $ payme --name "Franz Mustermänn" --iban "DE71110220330123456789" --amount 12.3 --remittance "RF18539007547034"
 ```
 
-or
+Generate QR code as png, save as file:
 
 ```bash
 $ payme --name "Franz Mustermänn" --iban "DE71110220330123456789" --amount 12.3 --remittance "RF18539007547034" --output png --file QR.png
