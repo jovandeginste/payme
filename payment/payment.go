@@ -44,18 +44,16 @@ type Payment struct {
 	RemittanceIsStructured bool
 }
 
-func NewStructured() Payment {
-	return Payment{
-		ServiceTag:             "BCD",
-		Version:                2,
-		CharacterSet:           2,
-		IdentificationCode:     "SCT",
-		RemittanceIsStructured: true,
-	}
+func NewStructured() *Payment {
+	p := New()
+
+	p.RemittanceIsStructured = true
+
+	return p
 }
 
-func New() Payment {
-	return Payment{
+func New() *Payment {
+	return &Payment{
 		ServiceTag:             "BCD",
 		Version:                2,
 		CharacterSet:           2,
