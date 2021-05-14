@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"log"
+
+	"github.com/jovandeginste/payme/payment"
 )
 
 const QRSize = 300
@@ -48,7 +50,7 @@ func main() {
 }
 
 func generateQRStdout(params *QRParams) error {
-	p := NewPayment()
+	p := payment.NewPayment()
 
 	p.NameBeneficiary = params.NameBeneficiary
 	p.IBANBeneficiary = params.IBANBeneficiary
@@ -60,7 +62,7 @@ func generateQRStdout(params *QRParams) error {
 }
 
 func generateQRPNG(params *QRParams) (string, error) {
-	p := NewPayment()
+	p := payment.NewPayment()
 
 	p.NameBeneficiary = params.NameBeneficiary
 	p.IBANBeneficiary = params.IBANBeneficiary
