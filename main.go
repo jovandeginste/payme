@@ -22,6 +22,7 @@ type QRParams struct {
 	IsStructured    bool
 	OutputType      string
 	OutputFile      string
+	Debug           bool
 }
 
 func main() {
@@ -40,6 +41,7 @@ func main() {
 	cmdRoot.Flags().BoolVar(&p.IsStructured, "structured", false, "Make the remittance (message) structured")
 	cmdRoot.Flags().StringVar(&p.OutputType, "output", "stdout", "output type: png or stdout")
 	cmdRoot.Flags().StringVar(&p.OutputFile, "file", "", "write code to file, leave empty for stdout")
+	cmdRoot.Flags().BoolVar(&p.Debug, "debug", false, "print debug output")
 
 	if err := cmdRoot.Execute(); err != nil {
 		log.Fatal(err)
@@ -51,6 +53,10 @@ func generate() {
 		qr  []byte
 		err error
 	)
+
+	if p.Debug {
+		log.Printf("%#v\n", p)
+	}
 
 	switch p.OutputType {
 	case "png":
@@ -89,11 +95,21 @@ func (params *QRParams) preparePayment() payment.Payment {
 func generateQRStdout(params QRParams) ([]byte, error) {
 	p := params.preparePayment()
 
+	if params.Debug {
+		s, _ := p.ToString()
+		log.Print("Data: ", s)
+	}
+
 	return p.ToQRString()
 }
 
 func generateQRPNG(params QRParams) ([]byte, error) {
 	p := params.preparePayment()
+
+	if params.Debug {
+		s, _ := p.ToString()
+		log.Print("Data: ", s)
+	}
 
 	return p.ToQRPNG(QRSize)
 }

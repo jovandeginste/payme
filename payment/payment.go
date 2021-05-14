@@ -3,6 +3,8 @@ package payment
 import (
 	"fmt"
 	"strings"
+
+	"github.com/almerlucke/go-iban/iban"
 )
 
 // See: https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/quick-response-code-guidelines-enable-data-capture-initiation
@@ -63,7 +65,16 @@ func New() Payment {
 }
 
 func (p *Payment) IBANBeneficiaryString() string {
-	return strings.ReplaceAll(p.IBANBeneficiary, " ", "")
+	i, err := p.IBAN()
+	if err != nil {
+		return ""
+	}
+
+	return i.PrintCode
+}
+
+func (p *Payment) IBAN() (*iban.IBAN, error) {
+	return iban.NewIBAN(p.IBANBeneficiary)
 }
 
 func (p *Payment) PurposeString() string {

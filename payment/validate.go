@@ -1,6 +1,8 @@
 package payment
 
-import "errors"
+import (
+	"errors"
+)
 
 func (p *Payment) ValidateHeader() error {
 	if p.ServiceTag != "BCD" {
@@ -77,12 +79,17 @@ func (p *Payment) ValidateBeneficiary() error {
 		return errors.New("field 'NameBeneficiary' should not exceed 70 characers")
 	}
 
-	if p.IBANBeneficiaryString() == "" {
-		return errors.New("field 'IBANBeneficiary' is required")
+	if err := p.ValidateIBAN(); err != nil {
+		return err
 	}
 
-	if len(p.IBANBeneficiaryString()) > 34 {
-		return errors.New("field 'IBANBeneficiary' should not exceed 70 characers")
+	return nil
+}
+
+func (p *Payment) ValidateIBAN() error {
+	_, err := p.IBAN()
+	if err != nil {
+		return err
 	}
 
 	return nil

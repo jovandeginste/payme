@@ -1,3 +1,6 @@
+# github.com/almerlucke/go-iban v0.0.0-20170112082528-316a6e2335b3
+## explicit
+github.com/almerlucke/go-iban/iban
 # github.com/boombuler/barcode v1.0.1
 ## explicit
 github.com/boombuler/barcode
