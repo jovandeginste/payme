@@ -96,7 +96,11 @@ func generateQRStdout(params QRParams) ([]byte, error) {
 	p := params.preparePayment()
 
 	if params.Debug {
-		s, _ := p.ToString()
+		s, err := p.ToString()
+		if err != nil {
+			return nil, err
+		}
+
 		log.Print("Data: ", s)
 	}
 
@@ -107,7 +111,11 @@ func generateQRPNG(params QRParams) ([]byte, error) {
 	p := params.preparePayment()
 
 	if params.Debug {
-		s, _ := p.ToString()
+		s, err := p.ToString()
+		if err != nil {
+			return nil, err
+		}
+
 		log.Print("Data: ", s)
 	}
 

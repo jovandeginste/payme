@@ -33,7 +33,7 @@ func TestUnstructuredPayment(t *testing.T) {
 SCT
 
 François D'Alsace S.A.
-FR1420041010050500013M02606
+FR14 2004 1010 0505 0001 3M02 606
 EUR12.30
 
 
@@ -64,7 +64,7 @@ func TestStructuredPayment(t *testing.T) {
 SCT
 BHBLDEHHXXX
 Franz Mustermänn
-DE71110220330123456789
+DE71 1102 2033 0123 4567 89
 EUR12.30
 GDDS
 RF18539007547034
