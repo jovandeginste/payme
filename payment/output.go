@@ -33,17 +33,17 @@ func (p *Payment) ToString() (string, error) {
 	return strings.Join(fields, "\n"), nil
 }
 
-func (p *Payment) ToQRString() (string, error) {
+func (p *Payment) ToQRString() ([]byte, error) {
 	var result bytes.Buffer
 
 	t, err := p.ToString()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	qrterminal.Generate(t, qrterminal.L, &result)
 
-	return result.String(), nil
+	return result.Bytes(), nil
 }
 
 func (p *Payment) ToQRPNG(qrSize int) ([]byte, error) {
