@@ -2,7 +2,14 @@ package payment
 
 import (
 	"errors"
+	"regexp"
 )
+
+const (
+	specialChars = `@&-+()"':?.,]+`
+)
+
+var StringValidator = regexp.MustCompile(`^[[:alnum:] ` + specialChars + `$`)
 
 func (p *Payment) ValidateHeader() error {
 	if p.ServiceTag != "BCD" {
@@ -61,8 +68,14 @@ func (p *Payment) ValidateRemittance() error {
 		return errors.New("structured 'Remittance' should not exceed 35 characters")
 	}
 
-	if !p.RemittanceIsStructured && len(p.Remittance) > 140 {
-		return errors.New("unstructured 'Remittance' should not exceed 140 characters")
+	if !p.RemittanceIsStructured {
+		if len(p.Remittance) > 140 {
+			return errors.New("unstructured 'Remittance' should not exceed 140 characters")
+		}
+
+		if !StringValidator.MatchString(p.Remittance) {
+			return errors.New("unstructured 'Remittance' should not only contain alpha-numerics, spaces and " + specialChars)
+		}
 	}
 
 	return nil
@@ -75,6 +88,10 @@ func (p *Payment) ValidateBeneficiary() error {
 
 	if len(p.NameBeneficiary) > 70 {
 		return errors.New("field 'NameBeneficiary' should not exceed 70 characers")
+	}
+
+	if !StringValidator.MatchString(p.NameBeneficiary) {
+		return errors.New("field 'NameBeneficiary' should not only contain alpha-numerics, spaces and " + specialChars)
 	}
 
 	if err := p.ValidateIBAN(); err != nil {
