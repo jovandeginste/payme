@@ -37,10 +37,8 @@ func (p *Payment) ValidateFields() error {
 		return err
 	}
 
-	if p.EuroAmount != 0 {
-		if p.EuroAmount < 0.01 || p.EuroAmount > 999999999.99 {
-			return errors.New("field 'EuroAmount' must be 0.01 or more and 999999999.99 or less")
-		}
+	if p.EuroAmount < 0.01 || p.EuroAmount > 999999999.99 {
+		return errors.New("field 'EuroAmount' must be 0.01 or more and 999999999.99 or less")
 	}
 
 	if len(p.PurposeString()) > 4 {
