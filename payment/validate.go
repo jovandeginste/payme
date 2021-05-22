@@ -9,7 +9,7 @@ const (
 	specialChars = `@&+()"':?.,-`
 )
 
-var StringValidator = regexp.MustCompile(`^[[:alnum:] ` + specialChars + `]+$`)
+var StringValidator = regexp.MustCompile(`^[\p{L}\d ` + specialChars + `]+$`)
 
 func (p *Payment) ValidateHeader() error {
 	if p.ServiceTag != "BCD" {
