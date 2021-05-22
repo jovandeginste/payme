@@ -6,10 +6,10 @@ import (
 )
 
 const (
-	specialChars = `@&-+()"':?.,]+`
+	specialChars = `@&+()"':?.,-`
 )
 
-var StringValidator = regexp.MustCompile(`^[[:alnum:] ` + specialChars + `$`)
+var StringValidator = regexp.MustCompile(`^[[:alnum:] ` + specialChars + `]+$`)
 
 func (p *Payment) ValidateHeader() error {
 	if p.ServiceTag != "BCD" {
@@ -74,7 +74,7 @@ func (p *Payment) ValidateRemittance() error {
 		}
 
 		if !StringValidator.MatchString(p.Remittance) {
-			return errors.New("unstructured 'Remittance' should not only contain alpha-numerics, spaces and " + specialChars)
+			return errors.New("unstructured 'Remittance' should only contain alpha-numerics, spaces and/or " + specialChars)
 		}
 	}
 
@@ -91,7 +91,7 @@ func (p *Payment) ValidateBeneficiary() error {
 	}
 
 	if !StringValidator.MatchString(p.NameBeneficiary) {
-		return errors.New("field 'NameBeneficiary' should not only contain alpha-numerics, spaces and " + specialChars)
+		return errors.New("field 'NameBeneficiary' should not only contain alpha-numerics, spaces and/or " + specialChars)
 	}
 
 	if err := p.ValidateIBAN(); err != nil {
