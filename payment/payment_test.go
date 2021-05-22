@@ -73,3 +73,32 @@ RF18539007547034
 
 	assert.Equal(t, expected, result)
 }
+
+func TestEuroAmountString(t *testing.T) {
+	p := Payment{}
+	p.EuroAmount = 0
+	assert.Equal(t, "", p.EuroAmountString())
+
+	p.EuroAmount = 0.01
+	assert.Equal(t, "EUR0.01", p.EuroAmountString())
+
+	p.EuroAmount = 1000.0001
+	assert.Equal(t, "EUR1000.00", p.EuroAmountString())
+}
+
+func TestIBANBeneficiaryString(t *testing.T) {
+	p := Payment{}
+
+	for _, s := range []string{
+		"DE71110220330123456789",
+		"DE71 11 022 0 33 0123 45678 9",
+		"   DE71110220330123456789",
+		"DE71110220330123456789  ",
+	} {
+		p.IBANBeneficiary = s
+		assert.Equal(t, "DE71 1102 2033 0123 4567 89", p.IBANBeneficiaryString(), "From: "+s)
+	}
+
+	p.IBANBeneficiary = "invalid"
+	assert.Empty(t, p.IBANBeneficiaryString())
+}
