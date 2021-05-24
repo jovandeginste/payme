@@ -30,7 +30,7 @@ var (
 	ErrValidationNameBeneficiaryCharacters = errors.New("field 'NameBeneficiary' should not only contain alpha-numerics, spaces and/or " + specialChars)
 )
 
-func (p *Payment) ValidateHeader() error {
+func (p *Payment) validateHeader() error {
 	if p.ServiceTag != "BCD" {
 		return ErrValidationServiceTag
 	}
@@ -54,12 +54,12 @@ func (p *Payment) ValidateHeader() error {
 	return nil
 }
 
-func (p *Payment) ValidateFields() error {
-	if err := p.ValidateHeader(); err != nil {
+func (p *Payment) validateFields() error {
+	if err := p.validateHeader(); err != nil {
 		return err
 	}
 
-	if err := p.ValidateBeneficiary(); err != nil {
+	if err := p.validateBeneficiary(); err != nil {
 		return err
 	}
 
@@ -73,14 +73,14 @@ func (p *Payment) ValidateFields() error {
 		return ErrValidationPurpose
 	}
 
-	if err := p.ValidateRemittance(); err != nil {
+	if err := p.validateRemittance(); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (p *Payment) ValidateRemittance() error {
+func (p *Payment) validateRemittance() error {
 	if p.Remittance == "" {
 		return ErrValidationRemittanceRequired
 	}
@@ -102,7 +102,7 @@ func (p *Payment) ValidateRemittance() error {
 	return nil
 }
 
-func (p *Payment) ValidateBeneficiary() error {
+func (p *Payment) validateBeneficiary() error {
 	if p.NameBeneficiary == "" {
 		return ErrValidationNameBeneficiaryRequired
 	}
@@ -115,14 +115,14 @@ func (p *Payment) ValidateBeneficiary() error {
 		return ErrValidationNameBeneficiaryCharacters
 	}
 
-	if err := p.ValidateIBAN(); err != nil {
+	if err := p.validateIBAN(); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (p *Payment) ValidateIBAN() error {
+func (p *Payment) validateIBAN() error {
 	_, err := p.IBAN()
 	if err != nil {
 		return err

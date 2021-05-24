@@ -13,7 +13,7 @@ import (
 // ToString returns the content of the QR code as string
 // Use this to then generate the QR code in the form you need
 func (p *Payment) ToString() (string, error) {
-	if err := p.ValidateFields(); err != nil {
+	if err := p.validateFields(); err != nil {
 		return "", err
 	}
 

@@ -15,8 +15,8 @@ func TestUnstructuredPaymentQR(t *testing.T) {
 	assert.Equal(t, "002", p.VersionString())
 	assert.Equal(t, "2", p.CharacterSetString())
 
-	p.NameBeneficiary = "François D'Alsace S.A."
-	p.IBANBeneficiary = "FR1420041010050500013M02606"
+	p.NameBeneficiary = ExampleName
+	p.IBANBeneficiary = ExampleIBAN
 	p.EuroAmount = 12.3
 	p.Remittance = "Client:Marie Louise La Lune"
 
