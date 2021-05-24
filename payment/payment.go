@@ -127,3 +127,12 @@ func (p *Payment) RemittanceString(structured bool) string {
 
 	return p.Remittance
 }
+
+// BICBeneficiaryString returns the BIC of the beneficiary, depending on the version of the QR code
+func (p *Payment) BICBeneficiaryString() string {
+	if p.Version != 1 {
+		return ""
+	}
+
+	return p.BICBeneficiary
+}

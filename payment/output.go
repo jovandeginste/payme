@@ -10,6 +10,8 @@ import (
 	"github.com/mdp/qrterminal/v3"
 )
 
+// ToString returns the content of the QR code as string
+// Use this to then generate the QR code in the form you need
 func (p *Payment) ToString() (string, error) {
 	if err := p.ValidateFields(); err != nil {
 		return "", err
@@ -33,14 +35,8 @@ func (p *Payment) ToString() (string, error) {
 	return strings.Join(fields, "\n"), nil
 }
 
-func (p *Payment) BICBeneficiaryString() string {
-	if p.Version != 1 {
-		return ""
-	}
-
-	return p.BICBeneficiary
-}
-
+// ToQRString returns an ASCII representation of the QR code
+// You can print this to the console, save to a file, etc.
 func (p *Payment) ToQRString() ([]byte, error) {
 	var result bytes.Buffer
 
@@ -54,6 +50,8 @@ func (p *Payment) ToQRString() ([]byte, error) {
 	return result.Bytes(), nil
 }
 
+// ToQRPNG returns an PNG representation of the QR code
+// You should save this to a file, or pass it to an image processing library
 func (p *Payment) ToQRPNG(qrSize int) ([]byte, error) {
 	t, err := p.ToString()
 	if err != nil {
