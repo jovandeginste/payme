@@ -94,7 +94,7 @@ func (p *Payment) VersionString() string {
 	return fmt.Sprintf("%03d", p.Version)
 }
 
-// CharacterSetString returns the version converted to string
+// CharacterSetString returns the character set converted to string
 func (p *Payment) CharacterSetString() string {
 	return fmt.Sprintf("%d", p.CharacterSet)
 }
@@ -102,10 +102,6 @@ func (p *Payment) CharacterSetString() string {
 // EuroAmountString returns the set amount in financial format (eg. EUR12.34)
 // or an empty string if the amount is 0
 func (p *Payment) EuroAmountString() string {
-	if p.EuroAmount == 0 {
-		return ""
-	}
-
 	return fmt.Sprintf("EUR%.2f", p.EuroAmount)
 }
 

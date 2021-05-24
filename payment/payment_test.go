@@ -77,9 +77,6 @@ RF18539007547034
 
 func TestEuroAmountString(t *testing.T) {
 	p := payment.Payment{}
-	p.EuroAmount = 0
-	assert.Equal(t, "", p.EuroAmountString())
-
 	p.EuroAmount = 0.01
 	assert.Equal(t, "EUR0.01", p.EuroAmountString())
 

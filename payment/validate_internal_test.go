@@ -108,17 +108,18 @@ func TestValidateHeader(t *testing.T) {
 func TestValidateFields(t *testing.T) {
 	p := validPayment()
 
-	for _, a := range []float64{-1, 0.001, 0.00999, 999999999.991, 1000000000} {
+	for _, a := range []float64{-1, 0, 0.001, 0.00999, 999999999.991, 1000000000} {
 		p.EuroAmount = a
 		assert.ErrorIs(t, ErrValidationEuroAmount, p.validateFields(), fmt.Sprintf("Amount: %f", a))
 	}
 
-	for _, a := range []float64{0, 0.01, 0.1, 1, 2.05, 99, 123456.78, 999999999.99} {
+	for _, a := range []float64{0.01, 0.1, 1, 2.05, 99, 123456.78, 999999999.99} {
 		p.EuroAmount = a
 		assert.NoError(t, p.validateFields(), fmt.Sprintf("Amount: %f", a))
 	}
 
 	p = validPayment()
+	p.EuroAmount = 1
 
 	for _, n := range []string{"ABCDEF", "AB CD EF"} {
 		p.Purpose = n
@@ -134,6 +135,8 @@ func TestValidateFields(t *testing.T) {
 func TestValidateRemittance(t *testing.T) {
 	p := validPayment()
 	p.Remittance = ""
+	p.EuroAmount = 1
+
 	assert.ErrorIs(t, ErrValidationRemittanceRequired, p.validateRemittance())
 	assert.ErrorIs(t, ErrValidationRemittanceRequired, p.validateFields())
 
