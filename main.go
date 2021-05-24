@@ -11,6 +11,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+// CLI to generate SEPA payment QR codes, either as ASCII or PNG
+
 const qrSize = 300
 
 type qrParams struct {
