@@ -108,7 +108,7 @@ func (q *qrParams) generateQRStdout() ([]byte, error) {
 		log.Print("Data: ", s)
 	}
 
-	return p.ToQRString()
+	return p.ToQRBytes()
 }
 
 func (q *qrParams) generateQRPNG() ([]byte, error) {

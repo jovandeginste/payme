@@ -35,9 +35,9 @@ func (p *Payment) ToString() (string, error) {
 	return strings.Join(fields, "\n"), nil
 }
 
-// ToQRString returns an ASCII representation of the QR code
+// ToQRBytes returns an ASCII representation of the QR code
 // You can print this to the console, save to a file, etc.
-func (p *Payment) ToQRString() ([]byte, error) {
+func (p *Payment) ToQRBytes() ([]byte, error) {
 	var result bytes.Buffer
 
 	t, err := p.ToString()

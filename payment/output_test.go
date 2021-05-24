@@ -22,7 +22,7 @@ func TestInvalid(t *testing.T) {
 	err := p.IsValid()
 	assert.Error(t, err)
 
-	_, err = p.ToQRString()
+	_, err = p.ToQRBytes()
 	assert.Error(t, err)
 
 	_, err = p.ToQRPNG(QRSize)
@@ -37,7 +37,12 @@ func ExamplePayment() {
 	p.EuroAmount = 12.3
 	p.Remittance = ExampleRemittance
 
-	fmt.Println(p.ToQRString())
+	o, err := p.ToQRBytes()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(o))
 }
 
 func TestUnstructuredPaymentQR(t *testing.T) {
@@ -54,7 +59,7 @@ func TestUnstructuredPaymentQR(t *testing.T) {
 	err := p.IsValid()
 	assert.NoError(t, err)
 
-	result, err := p.ToQRString()
+	result, err := p.ToQRBytes()
 	assert.NoError(t, err)
 
 	expected, err := ioutil.ReadFile("tests/test1.qr")
@@ -86,7 +91,7 @@ func TestStructuredPaymentQR(t *testing.T) {
 	err := p.IsValid()
 	assert.NoError(t, err)
 
-	result, err := p.ToQRString()
+	result, err := p.ToQRBytes()
 	assert.NoError(t, err)
 
 	expected, err := ioutil.ReadFile("tests/test2.qr")
