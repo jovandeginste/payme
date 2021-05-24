@@ -30,28 +30,9 @@ var (
 	ErrValidationNameBeneficiaryCharacters = errors.New("field 'NameBeneficiary' should not only contain alpha-numerics, spaces and/or " + specialChars)
 )
 
-func (p *Payment) validateHeader() error {
-	if p.ServiceTag != "BCD" {
-		return ErrValidationServiceTag
-	}
-
-	if p.CharacterSet < 1 || p.CharacterSet > 8 {
-		return ErrValidationCharacterSet
-	}
-
-	if p.Version != 1 && p.Version != 2 {
-		return ErrValidationVersion
-	}
-
-	if p.IdentificationCode != "SCT" {
-		return ErrValidationIdentificationCode
-	}
-
-	if p.Version == 1 && p.BICBeneficiary == "" {
-		return ErrValidationBICBeneficiary
-	}
-
-	return nil
+// Validate checks if all fields in the payment are consistent and meet the requirements
+func (p *Payment) IsValid() error {
+	return p.validateFields()
 }
 
 func (p *Payment) validateFields() error {
@@ -75,6 +56,30 @@ func (p *Payment) validateFields() error {
 
 	if err := p.validateRemittance(); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (p *Payment) validateHeader() error {
+	if p.ServiceTag != "BCD" {
+		return ErrValidationServiceTag
+	}
+
+	if p.CharacterSet < 1 || p.CharacterSet > 8 {
+		return ErrValidationCharacterSet
+	}
+
+	if p.Version != 1 && p.Version != 2 {
+		return ErrValidationVersion
+	}
+
+	if p.IdentificationCode != "SCT" {
+		return ErrValidationIdentificationCode
+	}
+
+	if p.Version == 1 && p.BICBeneficiary == "" {
+		return ErrValidationBICBeneficiary
 	}
 
 	return nil

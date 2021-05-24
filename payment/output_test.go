@@ -9,6 +9,19 @@ import (
 
 const QRSize = 300
 
+func TestInvalid(t *testing.T) {
+	p := New()
+
+	err := p.IsValid()
+	assert.Error(t, err)
+
+	_, err = p.ToQRString()
+	assert.Error(t, err)
+
+	_, err = p.ToQRPNG(QRSize)
+	assert.Error(t, err)
+}
+
 func TestUnstructuredPaymentQR(t *testing.T) {
 	p := New()
 
@@ -19,6 +32,9 @@ func TestUnstructuredPaymentQR(t *testing.T) {
 	p.IBANBeneficiary = ExampleIBAN
 	p.EuroAmount = 12.3
 	p.Remittance = "Client:Marie Louise La Lune"
+
+	err := p.IsValid()
+	assert.NoError(t, err)
 
 	result, err := p.ToQRString()
 	assert.NoError(t, err)
@@ -48,6 +64,9 @@ func TestStructuredPaymentQR(t *testing.T) {
 	p.EuroAmount = 12.3
 	p.Purpose = "GDDS"
 	p.Remittance = "RF18539007547034"
+
+	err := p.IsValid()
+	assert.NoError(t, err)
 
 	result, err := p.ToQRString()
 	assert.NoError(t, err)
