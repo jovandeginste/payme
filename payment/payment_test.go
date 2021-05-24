@@ -1,20 +1,21 @@
-package payment
+package payment_test
 
 import (
 	"testing"
 
+	"github.com/jovandeginste/payme/payment"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestIncompletePayment(t *testing.T) {
-	p := New()
+	p := payment.New()
 
 	_, err := p.ToString()
 	assert.Error(t, err)
 }
 
 func TestUnstructuredPayment(t *testing.T) {
-	p := New()
+	p := payment.New()
 
 	assert.Equal(t, "002", p.VersionString())
 	assert.Equal(t, "2", p.CharacterSetString())
@@ -44,7 +45,7 @@ Client:Marie Louise La Lune
 }
 
 func TestStructuredPayment(t *testing.T) {
-	p := NewStructured()
+	p := payment.NewStructured()
 
 	p.Version = 1
 	p.CharacterSet = 1
@@ -75,7 +76,7 @@ RF18539007547034
 }
 
 func TestEuroAmountString(t *testing.T) {
-	p := Payment{}
+	p := payment.Payment{}
 	p.EuroAmount = 0
 	assert.Equal(t, "", p.EuroAmountString())
 
@@ -87,7 +88,7 @@ func TestEuroAmountString(t *testing.T) {
 }
 
 func TestIBANBeneficiaryString(t *testing.T) {
-	p := Payment{}
+	p := payment.Payment{}
 
 	for _, s := range []string{
 		"DE71110220330123456789",

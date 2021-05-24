@@ -1,16 +1,21 @@
-package payment
+package payment_test
 
 import (
 	"io/ioutil"
 	"testing"
 
+	"github.com/jovandeginste/payme/payment"
 	"github.com/stretchr/testify/assert"
 )
 
-const QRSize = 300
+const (
+	QRSize      = 300
+	ExampleIBAN = "FR1420041010050500013M02606"
+	ExampleName = "François D'Alsace S.A."
+)
 
 func TestInvalid(t *testing.T) {
-	p := New()
+	p := payment.New()
 
 	err := p.IsValid()
 	assert.Error(t, err)
@@ -23,7 +28,7 @@ func TestInvalid(t *testing.T) {
 }
 
 func TestUnstructuredPaymentQR(t *testing.T) {
-	p := New()
+	p := payment.New()
 
 	assert.Equal(t, "002", p.VersionString())
 	assert.Equal(t, "2", p.CharacterSetString())
@@ -54,7 +59,7 @@ func TestUnstructuredPaymentQR(t *testing.T) {
 }
 
 func TestStructuredPaymentQR(t *testing.T) {
-	p := NewStructured()
+	p := payment.NewStructured()
 
 	p.Version = 1
 	p.CharacterSet = 1
