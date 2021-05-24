@@ -12,21 +12,35 @@ const (
 var (
 	stringValidator = regexp.MustCompile(`^[\p{L}\d ` + specialChars + `]+$`)
 
-	ErrValidationServiceTag         = errors.New("field 'ServiceTag' should be BCD")
-	ErrValidationCharacterSet       = errors.New("field 'CharacterSet' should be 1..8")
-	ErrValidationVersion            = errors.New("field 'Version' should be 1 or 2")
+	// ErrValidationServiceTag is returned when ServiceTag is not the correct value
+	ErrValidationServiceTag = errors.New("field 'ServiceTag' should be BCD")
+	// ErrValidationCharacterSet is returned when CharacterSet is not in the allowed range
+	ErrValidationCharacterSet = errors.New("field 'CharacterSet' should be 1..8")
+	// ErrValidationVersion is returned when Version is not 1 or 2
+	ErrValidationVersion = errors.New("field 'Version' should be 1 or 2")
+	// ErrValidationIdentificationCode is returned when IdentificationCode is not the correct value
 	ErrValidationIdentificationCode = errors.New("field 'IdentificationCode' should be SCT")
-	ErrValidationBICBeneficiary     = errors.New("field 'BICBeneficiary' is required when version is 1")
-	ErrValidationEuroAmount         = errors.New("field 'EuroAmount' must be 0.01 or more and 999999999.99 or less")
-	ErrValidationPurpose            = errors.New("field 'Purpose' should not exceed 4 characters")
+	// ErrValidationBICBeneficiary is returned when BICBeneficiary is not set
+	ErrValidationBICBeneficiary = errors.New("field 'BICBeneficiary' is required when version is 1")
+	// ErrValidationEuroAmount is returned when EuroAmount is not a valid amount
+	ErrValidationEuroAmount = errors.New("field 'EuroAmount' must be 0.01 or more and 999999999.99 or less")
+	// ErrValidationPurpose is returned when Purpose is not within bounds
+	ErrValidationPurpose = errors.New("field 'Purpose' should not exceed 4 characters")
 
-	ErrValidationRemittanceRequired               = errors.New("field 'Remittance' is required")
-	ErrValidationRemittanceStructuredTooLong      = errors.New("structured 'Remittance' should not exceed 35 characters")
-	ErrValidationRemittanceUnstructuredTooLong    = errors.New("unstructured 'Remittance' should not exceed 140 characters")
+	// ErrValidationRemittanceRequired is returned when Remittance is empty
+	ErrValidationRemittanceRequired = errors.New("field 'Remittance' is required")
+	// ErrValidationRemittanceStructuredTooLong is returned when Remittance is not within bounds for structured field
+	ErrValidationRemittanceStructuredTooLong = errors.New("structured 'Remittance' should not exceed 35 characters")
+	// ErrValidationRemittanceUnstructuredTooLong is returned when Remittance is not within bounds for unstructured field
+	ErrValidationRemittanceUnstructuredTooLong = errors.New("unstructured 'Remittance' should not exceed 140 characters")
+	// ErrValidationRemittanceUnstructuredCharacters is returned when Remittance contains invalid characters
 	ErrValidationRemittanceUnstructuredCharacters = errors.New("unstructured 'Remittance' should only contain alpha-numerics, spaces and/or " + specialChars)
 
-	ErrValidationNameBeneficiaryRequired   = errors.New("field 'NameBeneficiary' is required")
-	ErrValidationNameBeneficiaryTooLong    = errors.New("field 'NameBeneficiary' should not exceed 70 characers")
+	// ErrValidationNameBeneficiaryRequired is returned when NameBeneficiary is empty
+	ErrValidationNameBeneficiaryRequired = errors.New("field 'NameBeneficiary' is required")
+	// ErrValidationNameBeneficiaryTooLong is returned when NameBeneficiary is not within bounds
+	ErrValidationNameBeneficiaryTooLong = errors.New("field 'NameBeneficiary' should not exceed 70 characers")
+	// ErrValidationNameBeneficiaryCharacters is returned when NameBeneficiary contains invalid characters
 	ErrValidationNameBeneficiaryCharacters = errors.New("field 'NameBeneficiary' should not only contain alpha-numerics, spaces and/or " + specialChars)
 )
 
