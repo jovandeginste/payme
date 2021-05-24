@@ -58,7 +58,7 @@ func NewStructured() *Payment {
 	return p
 }
 
-// NewStructured returns a new Payment struct with default values for version 2
+// New returns a new Payment struct with default values for version 2
 func New() *Payment {
 	return &Payment{
 		ServiceTag:             "BCD",
