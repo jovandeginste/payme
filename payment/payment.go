@@ -9,16 +9,20 @@ import (
 
 // See: https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/quick-response-code-guidelines-enable-data-capture-initiation
 
+// Payment encapsulates all fields needed to generate the QR code
 type Payment struct {
+	// ServiceTag should always be BCD
 	ServiceTag string
-	Version    int
+	// Version should be v1 or v2
+	Version int
 	/*
 		1: UTF-8 5: ISO 8859-5
 		2: ISO 8859-1 6: ISO 8859-7
 		3: ISO 8859-2 7: ISO 8859-10
 		4: ISO 8859-4 8: ISO 8859-15
 	*/
-	CharacterSet       int
+	CharacterSet int
+	// IdentificationCode should always be SCT (SEPA Credit Transfer)
 	IdentificationCode string
 	// AT-23 BIC of the Beneficiary Bank [optional in Version 2]
 	// The BIC will continue to be mandatory for SEPA payment transactions involving non-EEA countries.
@@ -41,9 +45,11 @@ type Payment struct {
 	// Beneficiary to originator information [optional]
 	B2OInformation string
 
+	// Defines whether the Remittance Information is Structured or Unstructured
 	RemittanceIsStructured bool
 }
 
+// NewStructured returns a default Payment with the Structured flag enabled
 func NewStructured() *Payment {
 	p := New()
 
@@ -52,6 +58,7 @@ func NewStructured() *Payment {
 	return p
 }
 
+// NewStructured returns a new Payment struct with default values for version 2
 func New() *Payment {
 	return &Payment{
 		ServiceTag:             "BCD",
@@ -62,6 +69,7 @@ func New() *Payment {
 	}
 }
 
+// IBANBeneficiaryString returns the IBAN of the beneficiary in a standardized form
 func (p *Payment) IBANBeneficiaryString() string {
 	i, err := p.IBAN()
 	if err != nil {
@@ -71,22 +79,28 @@ func (p *Payment) IBANBeneficiaryString() string {
 	return i.PrintCode
 }
 
+// IBAN returns the parsed IBAN of the beneficiary
 func (p *Payment) IBAN() (*iban.IBAN, error) {
 	return iban.NewIBAN(p.IBANBeneficiary)
 }
 
+// PurposeString returns the parsed purpose
 func (p *Payment) PurposeString() string {
 	return strings.ReplaceAll(p.Purpose, " ", "")
 }
 
+// PurposeString returns the version converted to a 3-digit number with leading zeros
 func (p *Payment) VersionString() string {
 	return fmt.Sprintf("%03d", p.Version)
 }
 
+// CharacterSetString returns the version converted to string
 func (p *Payment) CharacterSetString() string {
 	return fmt.Sprintf("%d", p.CharacterSet)
 }
 
+// EuroAmountString returns the set amount in financial format (eg. EUR12.34)
+// or an empty string if the amount is 0
 func (p *Payment) EuroAmountString() string {
 	if p.EuroAmount == 0 {
 		return ""
@@ -95,14 +109,17 @@ func (p *Payment) EuroAmountString() string {
 	return fmt.Sprintf("EUR%.2f", p.EuroAmount)
 }
 
+// RemittanceStructured returns the value for the structured remittance line
 func (p *Payment) RemittanceStructured() string {
 	return p.RemittanceString(true)
 }
 
+// RemittanceText returns the value for the unstructured (freeform) remittance line
 func (p *Payment) RemittanceText() string {
 	return p.RemittanceString(false)
 }
 
+// RemittanceText returns the value for the remittance field, independing on being structured
 func (p *Payment) RemittanceString(structured bool) string {
 	if p.RemittanceIsStructured != structured {
 		return ""
