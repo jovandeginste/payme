@@ -1,6 +1,7 @@
 package payment_test
 
 import (
+	"fmt"
 	"io/ioutil"
 	"testing"
 
@@ -9,9 +10,10 @@ import (
 )
 
 const (
-	QRSize      = 300
-	ExampleIBAN = "FR1420041010050500013M02606"
-	ExampleName = "François D'Alsace S.A."
+	QRSize            = 300
+	ExampleIBAN       = "FR1420041010050500013M02606"
+	ExampleName       = "François D'Alsace S.A."
+	ExampleRemittance = "Client:Marie Louise La Lune"
 )
 
 func TestInvalid(t *testing.T) {
@@ -27,6 +29,17 @@ func TestInvalid(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func ExamplePayment() {
+	p := payment.New()
+
+	p.NameBeneficiary = ExampleName
+	p.IBANBeneficiary = ExampleIBAN
+	p.EuroAmount = 12.3
+	p.Remittance = ExampleRemittance
+
+	fmt.Println(p.ToQRString())
+}
+
 func TestUnstructuredPaymentQR(t *testing.T) {
 	p := payment.New()
 
@@ -36,7 +49,7 @@ func TestUnstructuredPaymentQR(t *testing.T) {
 	p.NameBeneficiary = ExampleName
 	p.IBANBeneficiary = ExampleIBAN
 	p.EuroAmount = 12.3
-	p.Remittance = "Client:Marie Louise La Lune"
+	p.Remittance = ExampleRemittance
 
 	err := p.IsValid()
 	assert.NoError(t, err)

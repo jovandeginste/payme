@@ -23,7 +23,7 @@ func TestUnstructuredPayment(t *testing.T) {
 	p.NameBeneficiary = ExampleName
 	p.IBANBeneficiary = ExampleIBAN
 	p.EuroAmount = 12.3
-	p.Remittance = "Client:Marie Louise La Lune"
+	p.Remittance = ExampleRemittance
 
 	result, err := p.ToString()
 	assert.NoError(t, err)
