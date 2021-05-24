@@ -10,7 +10,7 @@ const (
 )
 
 var (
-	StringValidator = regexp.MustCompile(`^[\p{L}\d ` + specialChars + `]+$`)
+	stringValidator = regexp.MustCompile(`^[\p{L}\d ` + specialChars + `]+$`)
 
 	ErrValidationServiceTag         = errors.New("field 'ServiceTag' should be BCD")
 	ErrValidationCharacterSet       = errors.New("field 'CharacterSet' should be 1..8")
@@ -30,7 +30,8 @@ var (
 	ErrValidationNameBeneficiaryCharacters = errors.New("field 'NameBeneficiary' should not only contain alpha-numerics, spaces and/or " + specialChars)
 )
 
-// Validate checks if all fields in the payment are consistent and meet the requirements
+// IsValid checks if all fields in the payment are consistent and meet the requirements.
+// It returns the first error it encounters, or nil if all is well.
 func (p *Payment) IsValid() error {
 	return p.validateFields()
 }
@@ -99,7 +100,7 @@ func (p *Payment) validateRemittance() error {
 			return ErrValidationRemittanceUnstructuredTooLong
 		}
 
-		if !StringValidator.MatchString(p.Remittance) {
+		if !stringValidator.MatchString(p.Remittance) {
 			return ErrValidationRemittanceUnstructuredCharacters
 		}
 	}
@@ -116,7 +117,7 @@ func (p *Payment) validateBeneficiary() error {
 		return ErrValidationNameBeneficiaryTooLong
 	}
 
-	if !StringValidator.MatchString(p.NameBeneficiary) {
+	if !stringValidator.MatchString(p.NameBeneficiary) {
 		return ErrValidationNameBeneficiaryCharacters
 	}
 

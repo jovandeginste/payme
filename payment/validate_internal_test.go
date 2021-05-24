@@ -39,11 +39,11 @@ var (
 
 func TestStringValidator(t *testing.T) {
 	for _, s := range validStrings {
-		assert.True(t, StringValidator.MatchString(s), fmt.Sprintf("Should match: %v", s))
+		assert.True(t, stringValidator.MatchString(s), fmt.Sprintf("Should match: %v", s))
 	}
 
 	for _, s := range invalidStrings {
-		assert.False(t, StringValidator.MatchString(s), fmt.Sprintf("Should not match: %v", s))
+		assert.False(t, stringValidator.MatchString(s), fmt.Sprintf("Should not match: %v", s))
 	}
 }
 

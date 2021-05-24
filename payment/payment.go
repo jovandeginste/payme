@@ -89,7 +89,7 @@ func (p *Payment) PurposeString() string {
 	return strings.ReplaceAll(p.Purpose, " ", "")
 }
 
-// PurposeString returns the version converted to a 3-digit number with leading zeros
+// VersionString returns the version converted to a 3-digit number with leading zeros
 func (p *Payment) VersionString() string {
 	return fmt.Sprintf("%03d", p.Version)
 }
@@ -119,7 +119,7 @@ func (p *Payment) RemittanceText() string {
 	return p.RemittanceString(false)
 }
 
-// RemittanceText returns the value for the remittance field, independing on being structured
+// RemittanceString returns the value for the remittance field, independing on being structured
 func (p *Payment) RemittanceString(structured bool) string {
 	if p.RemittanceIsStructured != structured {
 		return ""

@@ -1,4 +1,9 @@
-Simple CLI tool to generate payment QR codes
+# QR code generator (ASCII & PNG) for SEPA payments
+
+[![Coverage Status](https://coveralls.io/repos/github/jovandeginste/payme/badge.svg?branch=master)](https://coveralls.io/github/jovandeginste/payme?branch=master)
+[![codecov](https://codecov.io/gh/jovandeginste/payme/branch/master/graph/badge.svg?token=UZf6OT0h9t)](https://codecov.io/gh/jovandeginste/payme)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/jovandeginste/payme)](https://pkg.go.dev/github.com/jovandeginste/payme)
+[![Go Report Card](https://goreportcard.com/badge/github.com/jovandeginste/payme)](https://goreportcard.com/report/github.com/jovandeginste/payme)
 
 Install:
 

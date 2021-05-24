@@ -11,9 +11,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-const QRSize = 300
+const qrSize = 300
 
-type QRParams struct {
+type qrParams struct {
 	Payment    *payment.Payment
 	OutputType string
 	OutputFile string
@@ -21,7 +21,7 @@ type QRParams struct {
 }
 
 func main() {
-	q := QRParams{
+	q := qrParams{
 		Payment: payment.New(),
 	}
 
@@ -40,7 +40,7 @@ func main() {
 	}
 }
 
-func (q *QRParams) init(cmdRoot *cobra.Command) {
+func (q *qrParams) init(cmdRoot *cobra.Command) {
 	viper.SetEnvPrefix("PAYME")
 
 	for _, e := range []string{"name", "bic", "iban"} {
@@ -64,7 +64,7 @@ func (q *QRParams) init(cmdRoot *cobra.Command) {
 	cmdRoot.Flags().BoolVar(&q.Payment.RemittanceIsStructured, "structured", false, "Make the remittance (message) structured")
 }
 
-func (q *QRParams) generate() {
+func (q *qrParams) generate() {
 	var (
 		qr  []byte
 		err error
@@ -96,7 +96,7 @@ func (q *QRParams) generate() {
 	}
 }
 
-func (q *QRParams) generateQRStdout() ([]byte, error) {
+func (q *qrParams) generateQRStdout() ([]byte, error) {
 	p := q.Payment
 
 	if q.Debug {
@@ -111,7 +111,7 @@ func (q *QRParams) generateQRStdout() ([]byte, error) {
 	return p.ToQRString()
 }
 
-func (q *QRParams) generateQRPNG() ([]byte, error) {
+func (q *qrParams) generateQRPNG() ([]byte, error) {
 	p := q.Payment
 
 	if q.Debug {
@@ -123,5 +123,5 @@ func (q *QRParams) generateQRPNG() ([]byte, error) {
 		log.Print("Data: ", s)
 	}
 
-	return p.ToQRPNG(QRSize)
+	return p.ToQRPNG(qrSize)
 }
