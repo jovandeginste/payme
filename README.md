@@ -7,7 +7,7 @@
 Install:
 
 ```bash
-$ go get github.com/jovandeginste/payme
+$ go install github.com/jovandeginste/payme@latest
 ```
 
 Usage:
