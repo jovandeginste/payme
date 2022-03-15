@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	specialChars = `@&+()"':?.,-`
+	specialChars = `@&+()"':?.,-/`
 )
 
 var (
@@ -142,9 +142,5 @@ func (p *Payment) validateBeneficiary() error {
 
 func (p *Payment) validateIBAN() error {
 	_, err := p.IBAN()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
