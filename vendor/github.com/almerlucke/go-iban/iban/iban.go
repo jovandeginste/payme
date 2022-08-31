@@ -89,6 +89,7 @@ var countries = map[string]CountrySettings{
 	"MC": CountrySettings{Length: 27, Format: "F05F05A11F02"},
 	"MD": CountrySettings{Length: 24, Format: "A20"},
 	"ME": CountrySettings{Length: 22, Format: "F03F13F02"},
+	"MG": CountrySettings{Length: 27, Format: "F03F13F02"},
 	"MK": CountrySettings{Length: 19, Format: "F03A10F02"},
 	"MR": CountrySettings{Length: 27, Format: "F05F05F11F02"},
 	"MT": CountrySettings{Length: 31, Format: "U04F05A18"},
