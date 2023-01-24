@@ -30,10 +30,13 @@ func main() {
 	cmdRoot := &cobra.Command{
 		Use:   "payme",
 		Short: "Generate SEPA payment QR code",
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			q.generate()
 		},
 	}
+
+	cmdRoot.AddCommand(completionCmd(cmdRoot))
 
 	q.init(cmdRoot)
 
