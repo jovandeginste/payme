@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"time"
 
 	"github.com/jovandeginste/payme/payment"
 	"github.com/spf13/cobra"
@@ -14,6 +15,14 @@ import (
 // CLI to generate SEPA payment QR codes, either as ASCII or PNG
 
 const qrSize = 300
+
+var (
+	gitRef     = "0.0.0-dev"
+	gitRefName = "local"
+	gitRefType = "local"
+	gitCommit  = "local"
+	buildTime  = time.Now().Format(time.RFC3339)
+)
 
 type qrParams struct {
 	Payment    *payment.Payment
@@ -28,10 +37,11 @@ func main() {
 	}
 
 	cmdRoot := &cobra.Command{
-		Use:   "payme",
-		Short: "Generate SEPA payment QR code",
-		Args:  cobra.NoArgs,
-		Run: func(cmd *cobra.Command, args []string) {
+		Use:     "payme",
+		Version: fmt.Sprintf("%s (%s), built at %s\n", gitRefName, gitCommit, buildTime),
+		Short:   "Generate SEPA payment QR code",
+		Args:    cobra.NoArgs,
+		Run: func(_ *cobra.Command, _ []string) {
 			q.generate()
 		},
 	}
@@ -59,7 +69,7 @@ func (q *qrParams) init(cmdRoot *cobra.Command) {
 	cmdRoot.Flags().BoolVar(&q.Debug, "debug", false, "print debug output")
 
 	cmdRoot.Flags().IntVar(&q.Payment.CharacterSet, "character-set", 2, "QR code character set")
-	cmdRoot.Flags().IntVar(&q.Payment.Version, "version", 2, "QR code version")
+	cmdRoot.Flags().IntVar(&q.Payment.Version, "qr-version", 2, "QR code version")
 	cmdRoot.Flags().StringVar(&q.Payment.NameBeneficiary, "name", viper.GetString("name"), "Name of the beneficiary")
 	cmdRoot.Flags().StringVar(&q.Payment.BICBeneficiary, "bic", viper.GetString("bic"), "BIC of the beneficiary")
 	cmdRoot.Flags().StringVar(&q.Payment.IBANBeneficiary, "iban", viper.GetString("iban"), "IBAN of the beneficiary")

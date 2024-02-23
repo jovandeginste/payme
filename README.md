@@ -31,7 +31,7 @@ Flags:
       --purpose string      Purpose of the transaction
       --remittance string   Remittance (message)
       --structured          Make the remittance (message) structured
-      --version int         QR code version (default 2)
+      --qr-version int         QR code version (default 2)
 ```
 
 You can set some default values in your ENV, eg.:
