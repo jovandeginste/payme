@@ -2,11 +2,12 @@ package payment_test
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/jovandeginste/payme/payment"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 const (
@@ -20,13 +21,13 @@ func TestInvalid(t *testing.T) {
 	p := payment.New()
 
 	err := p.IsValid()
-	assert.Error(t, err)
+	require.Error(t, err)
 
 	_, err = p.ToQRBytes()
-	assert.Error(t, err)
+	require.Error(t, err)
 
 	_, err = p.ToQRPNG(QRSize)
-	assert.Error(t, err)
+	require.Error(t, err)
 }
 
 func ExamplePayment() {
@@ -57,22 +58,22 @@ func TestUnstructuredPaymentQR(t *testing.T) {
 	p.Remittance = ExampleRemittance
 
 	err := p.IsValid()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	result, err := p.ToQRBytes()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
-	expected, err := ioutil.ReadFile("tests/test1.qr")
+	expected, err := os.ReadFile("tests/test1.qr")
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, expected, result)
 
 	result, err = p.ToQRPNG(QRSize)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
-	expected, err = ioutil.ReadFile("tests/test1.png")
+	expected, err = os.ReadFile("tests/test1.png")
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, expected, result)
 }
 
@@ -89,21 +90,21 @@ func TestStructuredPaymentQR(t *testing.T) {
 	p.Remittance = "RF18539007547034"
 
 	err := p.IsValid()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	result, err := p.ToQRBytes()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
-	expected, err := ioutil.ReadFile("tests/test2.qr")
+	expected, err := os.ReadFile("tests/test2.qr")
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, expected, result)
 
 	result, err = p.ToQRPNG(QRSize)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
-	expected, err = ioutil.ReadFile("tests/test2.png")
+	expected, err = os.ReadFile("tests/test2.png")
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, expected, result)
 }

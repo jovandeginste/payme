@@ -5,13 +5,14 @@ import (
 
 	"github.com/jovandeginste/payme/payment"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestIncompletePayment(t *testing.T) {
 	p := payment.New()
 
 	_, err := p.ToString()
-	assert.Error(t, err)
+	require.Error(t, err)
 }
 
 func TestUnstructuredPayment(t *testing.T) {
@@ -26,7 +27,7 @@ func TestUnstructuredPayment(t *testing.T) {
 	p.Remittance = ExampleRemittance
 
 	result, err := p.ToString()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	expected := `BCD
 002
@@ -57,7 +58,7 @@ func TestStructuredPayment(t *testing.T) {
 	p.Remittance = "RF18539007547034"
 
 	result, err := p.ToString()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	expected := `BCD
 001

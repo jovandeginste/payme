@@ -67,11 +67,7 @@ func (p *Payment) validateFields() error {
 		return ErrValidationPurpose
 	}
 
-	if err := p.validateRemittance(); err != nil {
-		return err
-	}
-
-	return nil
+	return p.validateRemittance()
 }
 
 func (p *Payment) validateHeader() error {
@@ -133,11 +129,7 @@ func (p *Payment) validateBeneficiary() error {
 		return ErrValidationNameBeneficiaryCharacters
 	}
 
-	if err := p.validateIBAN(); err != nil {
-		return err
-	}
-
-	return nil
+	return p.validateIBAN()
 }
 
 func (p *Payment) validateIBAN() error {

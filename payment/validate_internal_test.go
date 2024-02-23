@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 const (
@@ -58,51 +59,51 @@ func validPayment() *Payment {
 
 func TestValidateNew(t *testing.T) {
 	p := validPayment()
-	assert.NoError(t, p.validateHeader())
+	require.NoError(t, p.validateHeader())
 
 	p = NewStructured()
-	assert.NoError(t, p.validateHeader())
+	require.NoError(t, p.validateHeader())
 }
 
 func TestValidateHeader(t *testing.T) {
 	p := validPayment()
 	p.ServiceTag = "ABC"
-	assert.ErrorIs(t, ErrValidationServiceTag, p.validateHeader())
-	assert.ErrorIs(t, ErrValidationServiceTag, p.validateFields())
+	require.ErrorIs(t, ErrValidationServiceTag, p.validateHeader())
+	require.ErrorIs(t, ErrValidationServiceTag, p.validateFields())
 
 	p = validPayment()
 	p.CharacterSet = 0
-	assert.ErrorIs(t, ErrValidationCharacterSet, p.validateHeader())
+	require.ErrorIs(t, ErrValidationCharacterSet, p.validateHeader())
 
 	p = validPayment()
 	p.CharacterSet = 9
-	assert.ErrorIs(t, ErrValidationCharacterSet, p.validateHeader())
+	require.ErrorIs(t, ErrValidationCharacterSet, p.validateHeader())
 
 	p = validPayment()
 	p.Version = 0
-	assert.ErrorIs(t, ErrValidationVersion, p.validateHeader())
+	require.ErrorIs(t, ErrValidationVersion, p.validateHeader())
 
 	p = validPayment()
 	p.Version = 1
 	p.BICBeneficiary = "XYZ"
-	assert.NoError(t, p.validateHeader())
+	require.NoError(t, p.validateHeader())
 
 	p = validPayment()
 	p.Version = 1
 	p.BICBeneficiary = ""
-	assert.ErrorIs(t, ErrValidationBICBeneficiary, p.validateHeader())
+	require.ErrorIs(t, ErrValidationBICBeneficiary, p.validateHeader())
 
 	p = validPayment()
 	p.Version = 2
-	assert.NoError(t, p.validateHeader())
+	require.NoError(t, p.validateHeader())
 
 	p = validPayment()
 	p.Version = 3
-	assert.ErrorIs(t, ErrValidationVersion, p.validateHeader())
+	require.ErrorIs(t, ErrValidationVersion, p.validateHeader())
 
 	p = validPayment()
 	p.IdentificationCode = "DEF"
-	assert.ErrorIs(t, ErrValidationIdentificationCode, p.validateHeader())
+	require.ErrorIs(t, ErrValidationIdentificationCode, p.validateHeader())
 }
 
 func TestValidateFields(t *testing.T) {
@@ -110,12 +111,12 @@ func TestValidateFields(t *testing.T) {
 
 	for _, a := range []float64{-1, 0, 0.001, 0.00999, 999999999.991, 1000000000} {
 		p.EuroAmount = a
-		assert.ErrorIs(t, ErrValidationEuroAmount, p.validateFields(), fmt.Sprintf("Amount: %f", a))
+		require.ErrorIs(t, ErrValidationEuroAmount, p.validateFields(), fmt.Sprintf("Amount: %f", a))
 	}
 
 	for _, a := range []float64{0.01, 0.1, 1, 2.05, 99, 123456.78, 999999999.99} {
 		p.EuroAmount = a
-		assert.NoError(t, p.validateFields(), fmt.Sprintf("Amount: %f", a))
+		require.NoError(t, p.validateFields(), fmt.Sprintf("Amount: %f", a))
 	}
 
 	p = validPayment()
@@ -123,12 +124,12 @@ func TestValidateFields(t *testing.T) {
 
 	for _, n := range []string{"ABCDEF", "AB CD EF"} {
 		p.Purpose = n
-		assert.ErrorIs(t, ErrValidationPurpose, p.validateFields(), "Purpose: "+n)
+		require.ErrorIs(t, ErrValidationPurpose, p.validateFields(), "Purpose: "+n)
 	}
 
 	for _, n := range []string{"ABCD", "AB CD", "A B C D"} {
 		p.Purpose = n
-		assert.NoError(t, p.validateFields())
+		require.NoError(t, p.validateFields())
 	}
 }
 
@@ -137,38 +138,38 @@ func TestValidateRemittance(t *testing.T) {
 	p.Remittance = ""
 	p.EuroAmount = 1
 
-	assert.ErrorIs(t, ErrValidationRemittanceRequired, p.validateRemittance())
-	assert.ErrorIs(t, ErrValidationRemittanceRequired, p.validateFields())
+	require.ErrorIs(t, ErrValidationRemittanceRequired, p.validateRemittance())
+	require.ErrorIs(t, ErrValidationRemittanceRequired, p.validateFields())
 
 	p.RemittanceIsStructured = true
 	p.Remittance = str40chars
-	assert.ErrorIs(t, ErrValidationRemittanceStructuredTooLong, p.validateRemittance())
+	require.ErrorIs(t, ErrValidationRemittanceStructuredTooLong, p.validateRemittance())
 
 	p.RemittanceIsStructured = false
 	p.Remittance = str40chars + str40chars + str40chars + str40chars // 160 characters
-	assert.ErrorIs(t, ErrValidationRemittanceUnstructuredTooLong, p.validateRemittance())
+	require.ErrorIs(t, ErrValidationRemittanceUnstructuredTooLong, p.validateRemittance())
 
 	p.RemittanceIsStructured = false
 	p.Remittance = "#!"
-	assert.ErrorIs(t, ErrValidationRemittanceUnstructuredCharacters, p.validateRemittance())
+	require.ErrorIs(t, ErrValidationRemittanceUnstructuredCharacters, p.validateRemittance())
 }
 
 func TestValidateBeneficiary(t *testing.T) {
 	p := validPayment()
 	p.NameBeneficiary = ""
-	assert.ErrorIs(t, ErrValidationNameBeneficiaryRequired, p.validateBeneficiary())
+	require.ErrorIs(t, ErrValidationNameBeneficiaryRequired, p.validateBeneficiary())
 
 	p.NameBeneficiary = str40chars + str40chars // 80 characters
-	assert.ErrorIs(t, ErrValidationNameBeneficiaryTooLong, p.validateBeneficiary())
+	require.ErrorIs(t, ErrValidationNameBeneficiaryTooLong, p.validateBeneficiary())
 
 	p.NameBeneficiary = "#!"
-	assert.ErrorIs(t, ErrValidationNameBeneficiaryCharacters, p.validateBeneficiary())
+	require.ErrorIs(t, ErrValidationNameBeneficiaryCharacters, p.validateBeneficiary())
 }
 
 func TestValidateIBAN(t *testing.T) {
 	p := validPayment()
 	p.IBANBeneficiary = "ABC"
 
-	assert.Error(t, p.validateIBAN())
-	assert.Error(t, p.validateBeneficiary())
+	require.Error(t, p.validateIBAN())
+	require.Error(t, p.validateBeneficiary())
 }

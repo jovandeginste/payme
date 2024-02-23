@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"time"
@@ -17,9 +16,9 @@ import (
 const qrSize = 300
 
 var (
-	gitRef     = "0.0.0-dev"
+	// gitRef     = "0.0.0-dev"
+	// gitRefType = "local"
 	gitRefName = "local"
-	gitRefType = "local"
 	gitCommit  = "local"
 	buildTime  = time.Now().Format(time.RFC3339)
 )
@@ -105,7 +104,7 @@ func (q *qrParams) generate() {
 		return
 	}
 
-	err = ioutil.WriteFile(q.OutputFile, qr, 0o600)
+	err = os.WriteFile(q.OutputFile, qr, 0o600)
 	if err != nil {
 		log.Fatal(err)
 	}
