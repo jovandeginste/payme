@@ -1,0 +1,41 @@
+# .github/workflows/release.yaml
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  releases-matrix:
+    name: Release Go Binary
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # build and publish in parallel:
+        # linux/386, linux/amd64, linux/arm64,
+        # windows/386, windows/amd64,
+        # darwin/amd64, darwin/arm64
+        goos: [linux, windows, darwin]
+        goarch: [amd64, arm64]
+        exclude:
+          - goarch: arm64
+            goos: windows
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set BUILD_TIME env
+        run: echo BUILD_TIME=$(date -u --rfc-3339=seconds) >> ${GITHUB_ENV}
+
+      - uses: wangyoucao577/go-release-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          ldflags: |
+            -X "main.buildTime=${{ env.BUILD_TIME }}"
+            -X main.gitCommit=${{ github.sha }}
+            -X main.gitRef=${{ github.ref }}
+            -X main.gitRefName=${{ github.ref_name }}
+            -X main.gitRefType=${{ github.ref_type }}
