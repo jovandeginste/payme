@@ -1,3 +1,18 @@
+## 3.2.0
+
+- Update to add sixel support #29
+- Update deps to latest
+
+## 3.1.1
+
+- Update deps to latest
+
+## 3.1.0
+
+- Add the ability to accept input string from stdin
+- Integrate github actions for build and release
+- Release support for Darwin M1/M2(aarch64)
+
 ## 3.0.0
 
 Adjust go.mod to include required version string

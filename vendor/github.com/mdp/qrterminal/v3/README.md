@@ -1,6 +1,6 @@
 # QRCode Terminal
 
-[![Build Status](https://api.travis-ci.org/mdp/qrterminal.svg)](https://travis-ci.org/mdp/qrterminal)
+[![Build Status](https://github.com/mdp/qrterminal/actions/workflows/build.yml/badge.svg)](https://github.com/mdp/qrterminal/actions/workflows/build.yml)
 
 A golang library for generating QR codes in the terminal.
 
@@ -69,7 +69,7 @@ func main() {
       Level: qrterminal.M,
       Writer: os.Stdout,
   }
-  qrterminal.Generate("https://github.com/mdp/qrterminal", config)
+  qrterminal.GenerateWithConfig("https://github.com/mdp/qrterminal", config)
 }
 ```
 
@@ -82,7 +82,9 @@ OSX: `brew install mdp/tap/qrterminal`
 
 Others: Download from the [releases page](https://github.com/mdp/qrterminal/releases)
 
-Source: `go get -u github.com/mdp/qrterminal/v3/cmd/qrterminal`
+Source: `go install github.com/mdp/qrterminal/v3/cmd/qrterminal@latest`
+
+Docker: `docker pull ghcr.io/mdp/qrterminal:latest`
 
 #### Usage
 
@@ -92,7 +94,16 @@ Print out a basic QR code in your terminal:
 Using 'medium' error correction:  
 `qrterminal https://github.com/mdp/qrterminal -l M`
 
-Or just use Docker: `docker run --rm mpercival/qrterminal:latest 'https://github.com/mdp/qrterminal'`
+Or just use Docker: `docker run --rm ghcr.io/mdp/qrterminal:latest 'https://github.com/mdp/qrterminal'`
+
+You can also pipe text via stdin
+
+`cat wireguard_peer.conf | qrterminal`
+
+or
+
+`cat wireguard_peer.conf | docker run --rm -i ghcr.io/mdp/qrterminal:latest`
+
 
 ### Contributors/Credits:
 
