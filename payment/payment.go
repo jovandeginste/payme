@@ -2,6 +2,7 @@ package payment
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/almerlucke/go-iban/iban"
@@ -96,7 +97,7 @@ func (p *Payment) VersionString() string {
 
 // CharacterSetString returns the character set converted to string
 func (p *Payment) CharacterSetString() string {
-	return fmt.Sprintf("%d", p.CharacterSet)
+	return strconv.Itoa(p.CharacterSet)
 }
 
 // EuroAmountString returns the set amount in financial format (eg. EUR12.34)
