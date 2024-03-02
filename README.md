@@ -84,6 +84,8 @@ $ payme \
 
 ## Support
 
+Please provide feedback if your banking app supports or does not support these QR codes.
+
 The QR code is tested with the mobile apps of these banks:
 
 ### Belgium
