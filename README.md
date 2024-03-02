@@ -2,9 +2,27 @@
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/jovandeginste/payme)](https://pkg.go.dev/github.com/jovandeginste/payme)
 [![Go Report Card](https://goreportcard.com/badge/github.com/jovandeginste/payme)](https://goreportcard.com/report/github.com/jovandeginste/payme)
-[![Coverage](http://gocover.io/_badge/github.com/jovandeginste/payme)](http://gocover.io/github.com/jovandeginste/payme)
+[![Go Coverage](https://github.com/jovandeginste/payme/wiki/coverage.svg)](https://raw.githack.com/wiki/jovandeginste/payme/coverage.html)
 
-Install:
+## What is this?
+
+This tool makes it easier for people (in Europe) to pay with bank transfers. It does not serve as a payment gateway or
+anything similar. It does no payment verification at all, it simply provides the necessary payment information in a QR
+code, which may be scanned by the person who wants to pay.
+
+The QR code contains the information necessary for a bank transaction in the form of a [SEPA credit
+transfer](https://epc-qr.eu/). It can be used to prefill the transaction form if your [banking app supports](#Support)
+payment by QR code.
+
+The process of generating the QR code is entirely local and offline. It can be printed in ASCII in the terminal, or
+exported as a PNG for inclusion in eg. a web page or a mail.
+
+One QR code can be used without limit, but will always contain the same payment information: amount, remittance message,
+destination account. More than one person can scan the same code to pay the same amount (eg. split a bill with friends),
+or one person can scan the code on a recurring base (eg. you pay your internet invoice every month and it's a fixed
+price)
+
+## Install
 
 ```bash
 $ go install github.com/jovandeginste/payme@latest
@@ -63,3 +81,21 @@ $ payme \
   --output png \
   --file QR.png
 ```
+
+## Support
+
+The QR code is tested with the mobile apps of these banks:
+
+### Belgium
+
+| Bank    | Support                                    |
+| ------- | ------------------------------------------ |
+| Belfius | Yes                                        |
+| Fortis  | Problems with characters in the remittance |
+| KBC     | Yes                                        |
+
+## References
+
+- https://en.wikipedia.org/wiki/Single_Euro_Payments_Area
+- https://en.wikipedia.org/wiki/EPC_QR_code
+- https://epc-qr.eu/
