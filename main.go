@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/jovandeginste/payme/payment"
 	"github.com/spf13/cobra"
@@ -20,7 +19,7 @@ var (
 	// gitRefType = "local"
 	gitRefName = "local"
 	gitCommit  = "local"
-	buildTime  = time.Now().Format(time.RFC3339)
+	buildTime  = "manually"
 )
 
 type qrParams struct {
@@ -37,7 +36,7 @@ func main() {
 
 	cmdRoot := &cobra.Command{
 		Use:     "payme",
-		Version: fmt.Sprintf("%s (%s), built at %s\n", gitRefName, gitCommit, buildTime),
+		Version: fmt.Sprintf("%s (%s), built %s\n", gitRefName, gitCommit, buildTime),
 		Short:   "Generate SEPA payment QR code",
 		Args:    cobra.NoArgs,
 		Run: func(_ *cobra.Command, _ []string) {
