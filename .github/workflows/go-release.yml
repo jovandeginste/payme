@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set BUILD_TIME env
-        run: echo BUILD_TIME=$(date -u --rfc-3339=seconds) >> ${GITHUB_ENV}
+        run: echo BUILD_TIME=$(TZ=UTC0 git show --quiet --date=iso-local --format="%cd") >> ${GITHUB_ENV}
 
       - uses: wangyoucao577/go-release-action@v1
         with:
