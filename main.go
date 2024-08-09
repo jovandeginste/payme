@@ -34,6 +34,17 @@ func main() {
 		Payment: payment.New(),
 	}
 
+	cmdRoot, err := newCommand(&q)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := cmdRoot.Execute(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func newCommand(q *qrParams) (*cobra.Command, error) {
 	cmdRoot := &cobra.Command{
 		Use:     "payme",
 		Version: fmt.Sprintf("%s (%s), built %s\n", gitRefName, gitCommit, buildTime),
@@ -46,19 +57,19 @@ func main() {
 
 	cmdRoot.AddCommand(completionCmd(cmdRoot))
 
-	q.init(cmdRoot)
-
-	if err := cmdRoot.Execute(); err != nil {
-		log.Fatal(err)
+	if err := q.init(cmdRoot); err != nil {
+		return nil, err
 	}
+
+	return cmdRoot, nil
 }
 
-func (q *qrParams) init(cmdRoot *cobra.Command) {
+func (q *qrParams) init(cmdRoot *cobra.Command) error {
 	viper.SetEnvPrefix("PAYME")
 
 	for _, e := range []string{"name", "bic", "iban"} {
 		if err := viper.BindEnv(e); err != nil {
-			log.Fatal(err)
+			return err
 		}
 	}
 
@@ -75,6 +86,8 @@ func (q *qrParams) init(cmdRoot *cobra.Command) {
 	cmdRoot.Flags().StringVar(&q.Payment.Remittance, "remittance", "", "Remittance (message)")
 	cmdRoot.Flags().StringVar(&q.Payment.Purpose, "purpose", "", "Purpose of the transaction")
 	cmdRoot.Flags().BoolVar(&q.Payment.RemittanceIsStructured, "structured", false, "Make the remittance (message) structured")
+
+	return nil
 }
 
 func (q *qrParams) generate() {

@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 )
 
-func completionCmd(rootCmd *cobra.Command) *cobra.Command {
+//nolint:errcheck
+func completionCmd(cmd *cobra.Command) *cobra.Command {
 	return &cobra.Command{
 		Use:   "completion [bash|zsh|fish|powershell]",
 		Short: "Generate completion script",
@@ -49,21 +49,20 @@ PowerShell:
   # To load completions for every new session, run:
   PS> %[1]s completion powershell > %[1]s.ps1
   # and source this file from your PowerShell profile.
-`, rootCmd.Root().Name()),
+`, cmd.Root().Name()),
 		DisableFlagsInUseLine: true,
 		ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
 		Args:                  cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
 		Run: func(cmd *cobra.Command, args []string) {
-			//nolint:errcheck
 			switch args[0] {
 			case "bash":
-				cmd.Root().GenBashCompletion(os.Stdout)
+				cmd.Root().GenBashCompletion(cmd.OutOrStdout())
 			case "zsh":
-				cmd.Root().GenZshCompletion(os.Stdout)
+				cmd.Root().GenZshCompletion(cmd.OutOrStdout())
 			case "fish":
-				cmd.Root().GenFishCompletion(os.Stdout, true)
+				cmd.Root().GenFishCompletion(cmd.OutOrStdout(), true)
 			case "powershell":
-				cmd.Root().GenPowerShellCompletionWithDesc(os.Stdout)
+				cmd.Root().GenPowerShellCompletionWithDesc(cmd.OutOrStdout())
 			}
 		},
 	}
