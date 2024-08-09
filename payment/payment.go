@@ -2,6 +2,7 @@ package payment
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -9,6 +10,10 @@ import (
 )
 
 // See: https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/quick-response-code-guidelines-enable-data-capture-initiation
+
+// commonSeparatorChars is a regular expression that matches common separator characters for IBAN
+// These characters are removed before the IBAN is validated
+var commonSeparatorChars = regexp.MustCompile("[ _-]")
 
 // Payment encapsulates all fields needed to generate the QR code
 type Payment struct {
@@ -80,9 +85,10 @@ func (p *Payment) IBANBeneficiaryString() string {
 	return i.PrintCode
 }
 
-// IBAN returns the parsed IBAN of the beneficiary
+// IBAN returns the parsed, sanitized IBAN of the beneficiary
 func (p *Payment) IBAN() (*iban.IBAN, error) {
-	return iban.NewIBAN(p.IBANBeneficiary)
+	s := commonSeparatorChars.ReplaceAllString(p.IBANBeneficiary, "")
+	return iban.NewIBAN(s)
 }
 
 // PurposeString returns the parsed purpose
