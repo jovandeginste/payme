@@ -24,7 +24,7 @@ jobs:
           - goarch: arm64
             goos: windows
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set BUILD_TIME env
         run: echo BUILD_TIME=$(TZ=UTC0 git show --quiet --date=iso-local --format="%cd") >> ${GITHUB_ENV}
 
