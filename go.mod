@@ -6,7 +6,7 @@ require (
 	github.com/almerlucke/go-iban v0.0.0-20220324081643-09bcab81b879
 	github.com/boombuler/barcode v1.1.0
 	github.com/mdp/qrterminal/v3 v3.2.1
-	github.com/spf13/cobra v1.10.1
+	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.21.0
 	github.com/stretchr/testify v1.11.1
 )
