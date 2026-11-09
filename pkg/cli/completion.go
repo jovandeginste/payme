@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 
 //nolint:errcheck
 func completionCmd(cmd *cobra.Command) *cobra.Command {
+	//nolint:exhaustruct_v5 // cobra defines the remaining fields
 	return &cobra.Command{
 		Use:   "completion [bash|zsh|fish|powershell]",
 		Short: "Generate completion script",

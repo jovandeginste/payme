@@ -25,7 +25,13 @@ price)
 ## Install
 
 ```bash
-$ go install github.com/jovandeginste/payme@latest
+$ go install github.com/jovandeginste/payme/cmd/payme@latest
+```
+
+Or build it from source:
+
+```bash
+$ make build
 ```
 
 Usage:
@@ -35,6 +41,11 @@ Generate SEPA payment QR code
 
 Usage:
   payme [flags]
+  payme [command]
+
+Available Commands:
+  completion  Generate completion script
+  help        Help about any command
 
 Flags:
       --amount float        Amount of the transaction
@@ -47,9 +58,12 @@ Flags:
       --name string         Name of the beneficiary
       --output string       output type: png or stdout (default "stdout")
       --purpose string      Purpose of the transaction
+      --qr-version int      QR code version (default 2)
       --remittance string   Remittance (message)
       --structured          Make the remittance (message) structured
-      --qr-version int         QR code version (default 2)
+  -v, --version             version for payme
+
+Use "payme [command] --help" for more information about a command.
 ```
 
 You can set some default values in your ENV, eg.:

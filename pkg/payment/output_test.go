@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/jovandeginste/payme/payment"
+	"github.com/jovandeginste/payme/pkg/payment"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -15,6 +15,7 @@ import (
 const (
 	QRSize            = 300
 	ExampleIBAN       = "FR1420041010050500013M02606"
+	ExampleIBANDE     = "DE71110220330123456789"
 	ExampleName       = "François D'Alsace S.A."
 	ExampleRemittance = "Client:Marie Louise La Lune"
 )
@@ -112,7 +113,7 @@ func TestStructuredPaymentQR(t *testing.T) {
 	p.CharacterSet = 1
 	p.BICBeneficiary = "BHBLDEHHXXX"
 	p.NameBeneficiary = "Franz Mustermänn"
-	p.IBANBeneficiary = "DE71110220330123456789"
+	p.IBANBeneficiary = ExampleIBANDE
 	p.EuroAmount = 12.3
 	p.Purpose = "GDDS"
 	p.Remittance = "RF18539007547034"

@@ -66,6 +66,7 @@ func NewStructured() *Payment {
 
 // New returns a new Payment struct with default values for version 2
 func New() *Payment {
+	//nolint:exhaustruct_v5 // the zero value is a valid default for the remaining fields
 	return &Payment{
 		ServiceTag:             "BCD",
 		Version:                2,

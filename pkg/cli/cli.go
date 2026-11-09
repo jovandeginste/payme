@@ -1,11 +1,11 @@
-package main
+package cli
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"os"
 
-	"github.com/jovandeginste/payme/payment"
+	"github.com/jovandeginste/payme/pkg/payment"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -15,8 +15,6 @@ import (
 const qrSize = 300
 
 var (
-	// gitRef     = "0.0.0-dev"
-	// gitRefType = "local"
 	gitRefName = "local"
 	gitCommit  = "local"
 	buildTime  = "manually"
@@ -29,29 +27,27 @@ type qrParams struct {
 	Debug      bool
 }
 
-func main() {
-	q := qrParams{
-		Payment: payment.New(),
-	}
+// NewCommand returns the root command for the payme CLI.
+func NewCommand() (*cobra.Command, error) {
+	return newCommand(newQRParams())
+}
 
-	cmdRoot, err := newCommand(&q)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := cmdRoot.Execute(); err != nil {
-		log.Fatal(err)
-	}
+func newQRParams() *qrParams {
+	//nolint:exhaustruct_v5 // optional fields are initialized from flag defaults
+	return &qrParams{Payment: payment.New()}
 }
 
 func newCommand(q *qrParams) (*cobra.Command, error) {
+	//nolint:exhaustruct_v5 // cobra defines the remaining fields
 	cmdRoot := &cobra.Command{
-		Use:     "payme",
-		Version: fmt.Sprintf("%s (%s), built %s\n", gitRefName, gitCommit, buildTime),
-		Short:   "Generate SEPA payment QR code",
-		Args:    cobra.NoArgs,
-		Run: func(_ *cobra.Command, _ []string) {
-			q.generate()
+		Use:           "payme",
+		Version:       fmt.Sprintf("%s (%s), built %s\n", gitRefName, gitCommit, buildTime),
+		Short:         "Generate SEPA payment QR code",
+		Args:          cobra.NoArgs,
+		SilenceErrors: true,
+		SilenceUsage:  true,
+		RunE: func(_ *cobra.Command, _ []string) error {
+			return q.generate()
 		},
 	}
 
@@ -90,64 +86,60 @@ func (q *qrParams) init(cmdRoot *cobra.Command) error {
 	return nil
 }
 
-func (q *qrParams) generate() {
+func (q *qrParams) generate() error {
+	if q.Debug {
+		slog.SetLogLoggerLevel(slog.LevelDebug)
+		slog.Debug("parameters", "params", fmt.Sprintf("%#v", q))
+	}
+
 	var (
 		qr  []byte
 		err error
 	)
-
-	if q.Debug {
-		log.Printf("%#v\n", q)
-	}
 
 	switch q.OutputType {
 	case "png":
 		qr, err = q.generateQRPNG()
 	case "stdout":
 		qr, err = q.generateQRStdout()
+	default:
+		return fmt.Errorf("unknown output type: %q", q.OutputType)
 	}
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	if q.OutputFile == "" {
-		fmt.Fprintf(os.Stdout, "%s", qr)
-		return
+		_, err = fmt.Fprint(os.Stdout, string(qr))
+		return err
 	}
 
-	err = os.WriteFile(q.OutputFile, qr, 0o600)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return os.WriteFile(q.OutputFile, qr, 0o600)
 }
 
 func (q *qrParams) generateQRStdout() ([]byte, error) {
-	p := q.Payment
-
 	if q.Debug {
-		s, err := p.ToString()
+		s, err := q.Payment.ToString()
 		if err != nil {
 			return nil, err
 		}
 
-		log.Print("Data: ", s)
+		slog.Debug("payment data", "data", s)
 	}
 
-	return p.ToQRBytes()
+	return q.Payment.ToQRBytes()
 }
 
 func (q *qrParams) generateQRPNG() ([]byte, error) {
-	p := q.Payment
-
 	if q.Debug {
-		s, err := p.ToString()
+		s, err := q.Payment.ToString()
 		if err != nil {
 			return nil, err
 		}
 
-		log.Print("Data: ", s)
+		slog.Debug("payment data", "data", s)
 	}
 
-	return p.ToQRPNG(qrSize)
+	return q.Payment.ToQRPNG(qrSize)
 }

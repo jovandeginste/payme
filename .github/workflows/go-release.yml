@@ -33,9 +33,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
+          project_path: ./cmd/payme
+          binary_name: payme
+          extra_files: LICENSE README.md
           ldflags: |
-            -X "main.buildTime=${{ env.BUILD_TIME }}"
-            -X main.gitCommit=${{ github.sha }}
-            -X main.gitRef=${{ github.ref }}
-            -X main.gitRefName=${{ github.ref_name }}
-            -X main.gitRefType=${{ github.ref_type }}
+            -X "github.com/jovandeginste/payme/pkg/cli.buildTime=${{ env.BUILD_TIME }}"
+            -X github.com/jovandeginste/payme/pkg/cli.gitCommit=${{ github.sha }}
+            -X github.com/jovandeginste/payme/pkg/cli.gitRefName=${{ github.ref_name }}

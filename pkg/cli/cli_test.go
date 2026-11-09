@@ -1,19 +1,14 @@
-package main
+package cli
 
 import (
 	"bytes"
 	"testing"
 
-	"github.com/jovandeginste/payme/payment"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestHelpCommand(t *testing.T) {
-	q := qrParams{
-		Payment: payment.New(),
-	}
-
-	cmdRoot, err := newCommand(&q)
+	cmdRoot, err := NewCommand()
 	assert.NoError(t, err)
 
 	actualOut := new(bytes.Buffer)
@@ -31,11 +26,7 @@ func TestHelpCommand(t *testing.T) {
 }
 
 func TestCompletionHelp(t *testing.T) {
-	q := qrParams{
-		Payment: payment.New(),
-	}
-
-	cmdRoot, err := newCommand(&q)
+	cmdRoot, err := NewCommand()
 	assert.NoError(t, err)
 
 	actualOut := new(bytes.Buffer)
@@ -53,11 +44,7 @@ func TestCompletionHelp(t *testing.T) {
 }
 
 func TestCompletionShells(t *testing.T) {
-	q := qrParams{
-		Payment: payment.New(),
-	}
-
-	cmdRoot, err := newCommand(&q)
+	cmdRoot, err := NewCommand()
 	assert.NoError(t, err)
 
 	for _, shell := range []string{"bash", "zsh", "fish", "powershell"} {
@@ -77,11 +64,7 @@ func TestCompletionShells(t *testing.T) {
 }
 
 func TestVersionCommand(t *testing.T) {
-	q := qrParams{
-		Payment: payment.New(),
-	}
-
-	cmdRoot, err := newCommand(&q)
+	cmdRoot, err := NewCommand()
 	assert.NoError(t, err)
 
 	actualOut := new(bytes.Buffer)

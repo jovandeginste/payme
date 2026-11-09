@@ -3,7 +3,7 @@ package payment_test
 import (
 	"testing"
 
-	"github.com/jovandeginste/payme/payment"
+	"github.com/jovandeginste/payme/pkg/payment"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -52,7 +52,7 @@ func TestStructuredPayment(t *testing.T) {
 	p.CharacterSet = 1
 	p.BICBeneficiary = "BHBLDEHHXXX"
 	p.NameBeneficiary = "Franz Mustermänn"
-	p.IBANBeneficiary = "DE71110220330123456789"
+	p.IBANBeneficiary = ExampleIBANDE
 	p.EuroAmount = 12.3
 	p.Purpose = "GDDS"
 	p.Remittance = "RF18539007547034"
@@ -77,7 +77,7 @@ RF18539007547034
 }
 
 func TestEuroAmountString(t *testing.T) {
-	p := payment.Payment{}
+	p := payment.New()
 	p.EuroAmount = 0.01
 	assert.Equal(t, "EUR0.01", p.EuroAmountString())
 
@@ -86,10 +86,10 @@ func TestEuroAmountString(t *testing.T) {
 }
 
 func TestIBANBeneficiaryString(t *testing.T) {
-	p := payment.Payment{}
+	p := payment.New()
 
 	for _, s := range []string{
-		"DE71110220330123456789",
+		ExampleIBANDE,
 		"DE71 11 022 0 33 0123 45678 9",
 		"   DE71110220330123456789",
 		"DE71110220330123456789  ",
