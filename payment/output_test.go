@@ -1,7 +1,9 @@
 package payment_test
 
 import (
+	"bytes"
 	"fmt"
+	"image/png"
 	"os"
 	"testing"
 
@@ -16,6 +18,32 @@ const (
 	ExampleName       = "François D'Alsace S.A."
 	ExampleRemittance = "Client:Marie Louise La Lune"
 )
+
+// assertPNGEqual compares the decoded content of two PNG images. The encoded
+// bytes are not compared, since they depend on the PNG encoder version.
+func assertPNGEqual(t *testing.T, expected, actual []byte) {
+	t.Helper()
+
+	expectedImage, err := png.Decode(bytes.NewReader(expected))
+	require.NoError(t, err)
+
+	actualImage, err := png.Decode(bytes.NewReader(actual))
+	require.NoError(t, err)
+
+	require.Equal(t, expectedImage.Bounds(), actualImage.Bounds())
+
+	bounds := expectedImage.Bounds()
+
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			r1, g1, b1, a1 := expectedImage.At(x, y).RGBA()
+			r2, g2, b2, a2 := actualImage.At(x, y).RGBA()
+
+			require.Equal(t, [4]uint32{r1, g1, b1, a1}, [4]uint32{r2, g2, b2, a2},
+				"pixel (%d, %d) differs", x, y)
+		}
+	}
+}
 
 func TestInvalid(t *testing.T) {
 	p := payment.New()
@@ -74,7 +102,7 @@ func TestUnstructuredPaymentQR(t *testing.T) {
 	expected, err = os.ReadFile("tests/test1.png")
 
 	require.NoError(t, err)
-	assert.Equal(t, expected, result)
+	assertPNGEqual(t, expected, result)
 }
 
 func TestStructuredPaymentQR(t *testing.T) {
@@ -106,5 +134,5 @@ func TestStructuredPaymentQR(t *testing.T) {
 	expected, err = os.ReadFile("tests/test2.png")
 
 	require.NoError(t, err)
-	assert.Equal(t, expected, result)
+	assertPNGEqual(t, expected, result)
 }

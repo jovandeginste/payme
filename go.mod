@@ -1,6 +1,6 @@
 module github.com/jovandeginste/payme
 
-go 1.25
+go 1.27
 
 require (
 	github.com/almerlucke/go-iban v0.0.0-20220324081643-09bcab81b879
