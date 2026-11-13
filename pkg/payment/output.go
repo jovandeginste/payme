@@ -50,6 +50,27 @@ func (p *Payment) ToQRBytes() ([]byte, error) {
 	return result.Bytes(), nil
 }
 
+// ToQRSixel returns a sixel representation of the QR code
+// Use this when the terminal supports sixel graphics.
+func (p *Payment) ToQRSixel() ([]byte, error) {
+	var result bytes.Buffer
+
+	t, err := p.ToString()
+	if err != nil {
+		return nil, err
+	}
+
+	//nolint:exhaustruct_v5 // sixel output only uses these fields
+	qrterminal.GenerateWithConfig(t, qrterminal.Config{
+		Level:     qrterminal.M,
+		Writer:    &result,
+		WithSixel: true,
+		QuietZone: qrterminal.QUIET_ZONE,
+	})
+
+	return result.Bytes(), nil
+}
+
 // ToQRPNG returns an PNG representation of the QR code
 // You should save this to a file, or pass it to an image processing library
 func (p *Payment) ToQRPNG(qrSize int) ([]byte, error) {

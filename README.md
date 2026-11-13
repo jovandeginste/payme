@@ -56,7 +56,7 @@ Flags:
   -h, --help                help for payme
       --iban string         IBAN of the beneficiary
       --name string         Name of the beneficiary
-      --output string       output type: png or stdout (default "stdout")
+      --output string       output type: stdout, png or sixel (default "stdout")
       --purpose string      Purpose of the transaction
       --qr-version int      QR code version (default 2)
       --remittance string   Remittance (message)
@@ -95,6 +95,19 @@ $ payme \
   --output png \
   --file QR.png
 ```
+
+Generate a sixel QR code for terminals with sixel support:
+
+```bash
+$ payme \
+  --name "Franz Mustermänn" \
+  --iban "DE71110220330123456789" \
+  --amount 12.3 \
+  --remittance "RF18539007547034" \
+  --output sixel
+```
+
+If sixel support cannot be detected, `payme` refuses to write sixel output to the terminal. Use `--file` to write the escape sequence to a file instead.
 
 ## Support
 
