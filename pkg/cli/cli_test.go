@@ -91,6 +91,31 @@ func TestSixelFileOutput(t *testing.T) {
 	assert.True(t, bytes.HasSuffix(data, []byte("\x1b\\")))
 }
 
+func TestKittyFileOutput(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "qr.kitty")
+
+	cmdRoot, err := NewCommand()
+	require.NoError(t, err)
+
+	cmdRoot.SetArgs([]string{
+		"--name", "Franz Mustermänn",
+		"--iban", "DE71110220330123456789",
+		"--amount", "12.3",
+		"--remittance", "RF18539007547034",
+		"--output", "kitty",
+		"--file", file,
+	})
+
+	_, err = cmdRoot.ExecuteC()
+	require.NoError(t, err)
+
+	data, err := os.ReadFile(file)
+	require.NoError(t, err)
+
+	assert.True(t, bytes.HasPrefix(data, []byte("\x1b_G")))
+	assert.True(t, bytes.HasSuffix(data, []byte("\x1b\\")))
+}
+
 func TestVersionCommand(t *testing.T) {
 	cmdRoot, err := NewCommand()
 	assert.NoError(t, err)

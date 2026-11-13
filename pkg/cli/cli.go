@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/jovandeginste/payme/pkg/payment"
-	"github.com/mdp/qrterminal/v4"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -70,7 +69,7 @@ func (q *qrParams) init(cmdRoot *cobra.Command) error {
 		}
 	}
 
-	cmdRoot.Flags().StringVar(&q.OutputType, "output", "stdout", "output type: stdout, png or sixel")
+	cmdRoot.Flags().StringVar(&q.OutputType, "output", "stdout", "output type: stdout, png, sixel or kitty")
 	cmdRoot.Flags().StringVar(&q.OutputFile, "file", "", "write code to file, leave empty for stdout")
 	cmdRoot.Flags().BoolVar(&q.Debug, "debug", false, "print debug output")
 
@@ -99,6 +98,8 @@ func (q *qrParams) generate() error {
 	)
 
 	switch q.OutputType {
+	case "kitty":
+		qr, err = q.generateQRKitty()
 	case "png":
 		qr, err = q.generateQRPNG()
 	case "sixel":
@@ -144,11 +145,24 @@ func (q *qrParams) generateQRSixel() ([]byte, error) {
 		slog.Debug("payment data", "data", s)
 	}
 
-	if q.OutputFile == "" && !qrterminal.IsSixelSupported(os.Stdout) {
+	if q.OutputFile == "" && !isSixelSupported() {
 		return nil, fmt.Errorf("terminal does not support sixel graphics; use --output stdout or --file")
 	}
 
 	return q.Payment.ToQRSixel()
+}
+
+func (q *qrParams) generateQRKitty() ([]byte, error) {
+	if q.Debug {
+		s, err := q.Payment.ToString()
+		if err != nil {
+			return nil, err
+		}
+
+		slog.Debug("payment data", "data", s)
+	}
+
+	return q.Payment.ToQRKitty(qrSize)
 }
 
 func (q *qrParams) generateQRPNG() ([]byte, error) {

@@ -7,7 +7,7 @@ import (
 
 	"github.com/boombuler/barcode"
 	"github.com/boombuler/barcode/qr"
-	"github.com/mdp/qrterminal/v4"
+	"github.com/dolmen-go/kittyimg"
 )
 
 // ToString returns the content of the QR code as string
@@ -35,38 +35,19 @@ func (p *Payment) ToString() (string, error) {
 	return strings.Join(fields, "\n"), nil
 }
 
-// ToQRBytes returns an ASCII representation of the QR code
-// You can print this to the console, save to a file, etc.
-func (p *Payment) ToQRBytes() ([]byte, error) {
-	var result bytes.Buffer
-
-	t, err := p.ToString()
+// ToQRKitty returns a kitty graphics protocol representation of the QR code
+// Use this when the terminal supports the kitty graphics protocol.
+func (p *Payment) ToQRKitty(qrSize int) ([]byte, error) {
+	pngData, err := p.ToQRPNG(qrSize)
 	if err != nil {
 		return nil, err
 	}
 
-	qrterminal.GenerateHalfBlock(t, qrterminal.M, &result)
-
-	return result.Bytes(), nil
-}
-
-// ToQRSixel returns a sixel representation of the QR code
-// Use this when the terminal supports sixel graphics.
-func (p *Payment) ToQRSixel() ([]byte, error) {
 	var result bytes.Buffer
 
-	t, err := p.ToString()
-	if err != nil {
+	if err := kittyimg.Transcode(&result, bytes.NewReader(pngData)); err != nil {
 		return nil, err
 	}
-
-	//nolint:exhaustruct_v5 // sixel output only uses these fields
-	qrterminal.GenerateWithConfig(t, qrterminal.Config{
-		Level:     qrterminal.M,
-		Writer:    &result,
-		WithSixel: true,
-		QuietZone: qrterminal.QUIET_ZONE,
-	})
 
 	return result.Bytes(), nil
 }

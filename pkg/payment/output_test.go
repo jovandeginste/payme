@@ -89,6 +89,20 @@ func TestToQRSixel(t *testing.T) {
 	assert.True(t, bytes.HasSuffix(result, []byte("\x1b\\")))
 }
 
+func TestToQRKitty(t *testing.T) {
+	p := payment.New()
+
+	p.NameBeneficiary = ExampleName
+	p.IBANBeneficiary = ExampleIBAN
+	p.EuroAmount = 12.3
+	p.Remittance = ExampleRemittance
+
+	result, err := p.ToQRKitty(QRSize)
+	require.NoError(t, err)
+	assert.True(t, bytes.HasPrefix(result, []byte("\x1b_G")))
+	assert.True(t, bytes.HasSuffix(result, []byte("\x1b\\")))
+}
+
 func TestUnstructuredPaymentQR(t *testing.T) {
 	p := payment.New()
 
