@@ -1,6 +1,6 @@
 # QRCode Terminal
 
-[![Build Status](https://github.com/mdp/qrterminal/actions/workflows/build.yml/badge.svg)](https://github.com/mdp/qrterminal/actions/workflows/build.yml)
+[![CI](https://github.com/mdp/qrterminal/actions/workflows/ci.yml/badge.svg)](https://github.com/mdp/qrterminal/actions/workflows/ci.yml)
 
 A golang library for generating QR codes in the terminal.
 
@@ -19,13 +19,13 @@ For command line usage [see below](https://github.com/mdp/qrterminal#command-lin
 
 As a library in an application
 
-`go get github.com/mdp/qrterminal/v3`
+`go get github.com/mdp/qrterminal/v4`
 
 ## Usage
 
 ```go
 import (
-    "github.com/mdp/qrterminal/v3"
+    "github.com/mdp/qrterminal/v4"
     "os"
     )
 
@@ -40,7 +40,7 @@ func main() {
 Large Inverted barcode with medium redundancy and a 1 pixel border
 ```go
 import (
-    "github.com/mdp/qrterminal/v3"
+    "github.com/mdp/qrterminal/v4"
     "os"
     )
 
@@ -59,7 +59,7 @@ func main() {
 HalfBlock barcode with medium redundancy
 ```go
 import (
-    "github.com/mdp/qrterminal/v3"
+    "github.com/mdp/qrterminal/v4"
     "os"
     )
 
@@ -82,7 +82,7 @@ OSX: `brew install mdp/tap/qrterminal`
 
 Others: Download from the [releases page](https://github.com/mdp/qrterminal/releases)
 
-Source: `go install github.com/mdp/qrterminal/v3/cmd/qrterminal@latest`
+Source: `go install github.com/mdp/qrterminal/v4/cmd/qrterminal@latest`
 
 Docker: `docker pull ghcr.io/mdp/qrterminal:latest`
 

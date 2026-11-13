@@ -1,1 +1,4 @@
 /bin/
+
+# qrterminal ships a prebuilt binary in its module; keep the source, ignore the binary
+/vendor/github.com/mdp/qrterminal/v*/qrterminal

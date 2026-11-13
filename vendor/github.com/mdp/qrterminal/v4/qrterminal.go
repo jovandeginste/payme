@@ -11,27 +11,35 @@ import (
 	"rsc.io/qr"
 )
 
-const WHITE = "\033[47m  \033[0m"
-const BLACK = "\033[40m  \033[0m"
+const (
+	WHITE = "\033[47m  \033[0m"
+	BLACK = "\033[40m  \033[0m"
+)
 
 // Use ascii blocks to form the QR Code
-const BLACK_WHITE = "▄"
-const BLACK_BLACK = " "
-const WHITE_BLACK = "▀"
-const WHITE_WHITE = "█"
+const (
+	BLACK_WHITE = "▄"
+	BLACK_BLACK = " "
+	WHITE_BLACK = "▀"
+	WHITE_WHITE = "█"
+)
 
 // Level - the QR Code's redundancy level
-const H = qr.H
-const M = qr.M
-const L = qr.L
+const (
+	H = qr.H
+	M = qr.M
+	L = qr.L
+)
 
 // default is 4-pixel-wide white quiet zone
 const QUIET_ZONE = 4
 
 // Sixel Support Control Sequence
 // Color 0: Black Color 1: White
-const SIXEL_BEGIN = "\x1bPq\n#0;2;0;0;0#1;2;100;100;100\n"
-const SIXEL_END = "\x1b\\"
+const (
+	SIXEL_BEGIN = "\x1bPq\n#0;2;0;0;0#1;2;100;100;100\n"
+	SIXEL_END   = "\x1b\\"
+)
 
 // Sixel Block Size, should be always greater than 6.
 const SIXEL_BLOCK_SIZE = 12
@@ -49,29 +57,42 @@ type Config struct {
 	WithSixel      bool
 }
 
+var (
+	makeRaw    = term.MakeRaw
+	restore    = term.Restore
+	isTerminal = term.IsTerminal
+)
+
 func IsSixelSupported(w io.Writer) bool {
 	if w != os.Stdout {
 		return false
 	}
 	stdout := os.Stdout
-	if !term.IsTerminal(int(stdout.Fd())) {
+	if !isTerminal(int(stdout.Fd())) {
 		return false
 	}
-	_, err := stdout.Write([]byte("\x1B[c"))
+	fd := int(stdout.Fd())
+	// set echo off
+	raw, err := makeRaw(fd)
+	if raw == nil || err != nil {
+		return false
+	}
+	defer func() {
+		_ = restore(fd, raw)
+	}()
+
+	_, err = stdout.Write([]byte("\x1B[c"))
 	if err != nil {
 		return false
 	}
 	buf := make([]byte, 1024)
-	//set echo off
-	raw, err := term.MakeRaw(int(stdout.Fd()))
-	defer term.Restore(int(stdout.Fd()), raw)
 	_, err = stdout.Read(buf)
 	if err != nil {
 		return false
 	}
 	for _, b := range string(buf) {
 		if b == '4' {
-			//Found Sixel Support
+			// Found Sixel Support
 			return true
 		}
 	}
@@ -133,22 +154,23 @@ func (c *Config) writeFullBlocks(w io.Writer, code *qr.Code) {
 	white := c.WhiteChar
 	black := c.BlackChar
 
-	// Frame the barcode in a 1 pixel border
+	// Frame the barcode in a quiet zone border. code is Size x Size; iterate
+	// over exactly Size rows and columns (no phantom row/column).
 	w.Write([]byte(stringRepeat(stringRepeat(white,
 		code.Size+c.QuietZone*2)+"\n", c.QuietZone))) // top border
-	for i := 0; i <= code.Size; i++ {
+	for i := 0; i < code.Size; i++ {
 		w.Write([]byte(stringRepeat(white, c.QuietZone))) // left border
-		for j := 0; j <= code.Size; j++ {
+		for j := 0; j < code.Size; j++ {
 			if code.Black(j, i) {
 				w.Write([]byte(black))
 			} else {
 				w.Write([]byte(white))
 			}
 		}
-		w.Write([]byte(stringRepeat(white, c.QuietZone-1) + "\n")) // right border
+		w.Write([]byte(stringRepeat(white, c.QuietZone) + "\n")) // right border
 	}
 	w.Write([]byte(stringRepeat(stringRepeat(white,
-		code.Size+c.QuietZone*2)+"\n", c.QuietZone-1))) // bottom border
+		code.Size+c.QuietZone*2)+"\n", c.QuietZone))) // bottom border
 }
 
 func (c *Config) writeHalfBlocks(w io.Writer, code *qr.Code) {
@@ -156,19 +178,17 @@ func (c *Config) writeHalfBlocks(w io.Writer, code *qr.Code) {
 	bb := c.BlackChar
 	wb := c.WhiteBlackChar
 	bw := c.BlackWhiteChar
-	// Frame the barcode in a 4 pixel border
+	// Frame the barcode in a quiet zone border. Border rows always use the
+	// full white block character rather than half-block transition
+	// characters, so the border renders cleanly with any palette,
+	// including inverted ones (#39).
+	rows := (c.QuietZone + 1) / 2
+	border := stringRepeat(ww, code.Size+c.QuietZone*2) + "\n"
 	// top border
-	if c.QuietZone%2 != 0 {
-		w.Write([]byte(stringRepeat(bw, code.Size+c.QuietZone*2) + "\n"))
-		w.Write([]byte(stringRepeat(stringRepeat(ww,
-			code.Size+c.QuietZone*2)+"\n", c.QuietZone/2)))
-	} else {
-		w.Write([]byte(stringRepeat(stringRepeat(ww,
-			code.Size+c.QuietZone*2)+"\n", c.QuietZone/2)))
-	}
-	for i := 0; i <= code.Size; i += 2 {
+	w.Write([]byte(stringRepeat(border, rows)))
+	for i := 0; i < code.Size; i += 2 {
 		w.Write([]byte(stringRepeat(ww, c.QuietZone))) // left border
-		for j := 0; j <= code.Size; j++ {
+		for j := 0; j < code.Size; j++ {
 			next_black := false
 			if i+1 < code.Size {
 				next_black = code.Black(j, i+1)
@@ -184,17 +204,10 @@ func (c *Config) writeHalfBlocks(w io.Writer, code *qr.Code) {
 				w.Write([]byte(wb))
 			}
 		}
-		w.Write([]byte(stringRepeat(ww, c.QuietZone-1) + "\n")) // right border
+		w.Write([]byte(stringRepeat(ww, c.QuietZone) + "\n")) // right border
 	}
 	// bottom border
-	if c.QuietZone%2 == 0 {
-		w.Write([]byte(stringRepeat(stringRepeat(ww,
-			code.Size+c.QuietZone*2)+"\n", c.QuietZone/2-1)))
-		w.Write([]byte(stringRepeat(wb, code.Size+c.QuietZone*2) + "\n"))
-	} else {
-		w.Write([]byte(stringRepeat(stringRepeat(ww,
-			code.Size+c.QuietZone*2)+"\n", c.QuietZone/2)))
-	}
+	w.Write([]byte(stringRepeat(border, rows)))
 }
 
 func stringRepeat(s string, count int) string {
@@ -206,9 +219,10 @@ func stringRepeat(s string, count int) string {
 
 // GenerateWithConfig expects a string to encode and a config
 func GenerateWithConfig(text string, config Config) {
-	if config.QuietZone < 1 {
+	if config.QuietZone < 0 {
 		config.QuietZone = 1 // at least 1-pixel-wide white quiet zone
 	}
+	// Note: a QuietZone of 0 disables the border entirely (#38).
 	w := config.Writer
 	code, _ := qr.Encode(text, config.Level)
 
@@ -244,7 +258,8 @@ func Generate(text string, l qr.Level, w io.Writer) {
 		WhiteChar: WHITE,
 		QuietZone: QUIET_ZONE,
 	}
-	config.WithSixel = IsSixelSupported(w)
+	// Sixel support is opt-in; callers should set WithSixel explicitly (e.g. via
+	// IsSixelSupported) if they want sixel output.
 	GenerateWithConfig(text, config)
 }
 
