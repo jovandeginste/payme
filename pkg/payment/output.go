@@ -7,7 +7,7 @@ import (
 
 	"github.com/boombuler/barcode"
 	"github.com/boombuler/barcode/qr"
-	"github.com/mdp/qrterminal/v3"
+	"github.com/mdp/qrterminal/v4"
 )
 
 // ToString returns the content of the QR code as string
