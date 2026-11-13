@@ -59,7 +59,7 @@ func (p *Payment) validateFields() error {
 		return err
 	}
 
-	if p.EuroAmount < 0.01 || p.EuroAmount > 999999999.99 {
+	if p.EuroAmount != 0 && (p.EuroAmount < 0.01 || p.EuroAmount > 999999999.99) {
 		return ErrValidationEuroAmount
 	}
 

@@ -39,7 +39,7 @@ type Payment struct {
 	// Only IBAN is allowed.
 	IBANBeneficiary string
 	// AT-04 Amount of the Credit Transfer in Euro [optional]
-	// Amount must be 0.01 or more and 999999999.99 or less
+	// Set to 0 to leave the amount empty so the payer can enter it
 	EuroAmount float64
 	// AT-44 Purpose of the Credit Transfer [optional]
 	Purpose string
@@ -108,8 +108,12 @@ func (p *Payment) CharacterSetString() string {
 }
 
 // EuroAmountString returns the set amount in financial format (eg. EUR12.34)
-// or an empty string if the amount is 0
+// or an empty string when the amount is 0
 func (p *Payment) EuroAmountString() string {
+	if p.EuroAmount == 0 {
+		return ""
+	}
+
 	return fmt.Sprintf("EUR%.2f", p.EuroAmount)
 }
 

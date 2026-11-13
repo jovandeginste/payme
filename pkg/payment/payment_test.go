@@ -1,6 +1,7 @@
 package payment_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/jovandeginste/payme/pkg/payment"
@@ -76,6 +77,22 @@ RF18539007547034
 	assert.Equal(t, expected, result)
 }
 
+func TestZeroAmount(t *testing.T) {
+	p := payment.New()
+
+	p.NameBeneficiary = ExampleName
+	p.IBANBeneficiary = ExampleIBAN
+	p.Remittance = ExampleRemittance
+
+	result, err := p.ToString()
+	require.NoError(t, err)
+
+	lines := strings.Split(result, "\n")
+
+	require.Len(t, lines, 12)
+	assert.Empty(t, lines[7])
+}
+
 func TestEuroAmountString(t *testing.T) {
 	p := payment.New()
 	p.EuroAmount = 0.01
@@ -83,6 +100,9 @@ func TestEuroAmountString(t *testing.T) {
 
 	p.EuroAmount = 1000.0001
 	assert.Equal(t, "EUR1000.00", p.EuroAmountString())
+
+	p.EuroAmount = 0
+	assert.Empty(t, p.EuroAmountString())
 }
 
 func TestIBANBeneficiaryString(t *testing.T) {

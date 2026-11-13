@@ -48,20 +48,20 @@ Available Commands:
   help        Help about any command
 
 Flags:
-      --amount float        Amount of the transaction
-      --bic string          BIC of the beneficiary
-      --character-set int   QR code character set (default 2)
-      --debug               print debug output
-      --file string         write code to file, leave empty for stdout
-  -h, --help                help for payme
-      --iban string         IBAN of the beneficiary
-      --name string         Name of the beneficiary
-      --output string       output type: stdout, png, sixel or kitty (default "stdout")
-      --purpose string      Purpose of the transaction
-      --qr-version int      QR code version (default 2)
-      --remittance string   Remittance (message)
-      --structured          Make the remittance (message) structured
-  -v, --version             version for payme
+      --amount float              Amount of the transaction (0 = no amount)
+      --bic string                BIC of the beneficiary
+      --character-set int         QR code character set (default 2)
+      --debug[=true|false]        print debug output
+      --file string               write code to file, leave empty for stdout
+  -h, --help[=true|false]         help for payme
+      --iban string               IBAN of the beneficiary
+      --name string               Name of the beneficiary
+      --output string             output type: stdout, png, sixel or kitty (default "stdout")
+      --purpose string            Purpose of the transaction
+      --qr-version int            QR code version (default 2)
+      --remittance string         Remittance (message)
+      --structured[=true|false]   Make the remittance (message) structured
+  -v, --version[=true|false]      version for payme
 
 Use "payme [command] --help" for more information about a command.
 ```
@@ -81,6 +81,15 @@ $ payme \
   --name "Franz Mustermänn" \
   --iban "DE71110220330123456789" \
   --amount 12.3 \
+  --remittance "RF18539007547034"
+```
+
+Generate a QR code without a fixed amount, so the payer can enter it:
+
+```bash
+$ payme \
+  --name "Franz Mustermänn" \
+  --iban "DE71110220330123456789" \
   --remittance "RF18539007547034"
 ```
 
