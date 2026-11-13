@@ -30,8 +30,8 @@ func TestReadWithTimeout(t *testing.T) {
 
 func TestReadWithTimeoutExpires(t *testing.T) {
 	reader, writer := io.Pipe()
-	defer reader.Close()
-	defer writer.Close()
+	defer func() { _ = reader.Close() }()
+	defer func() { _ = writer.Close() }()
 
 	buf := make([]byte, 1)
 
